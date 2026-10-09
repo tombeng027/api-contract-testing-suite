@@ -12,7 +12,10 @@ def main() -> None:
     price = int(price_text)
     checks: list[dict[str, object]] = []
     outcome = "passed"
-    feedback = "Accepted valid prices and rejected incorrect prices/types."
+    feedback = (
+        "Accepted valid prices and rejected incorrect prices/types."
+        if lab is None else f"All selected Lab {lab} behavior checks passed."
+    )
     try:
         spec = importlib.util.spec_from_file_location("learner_submission", source)
         if spec is None or spec.loader is None:

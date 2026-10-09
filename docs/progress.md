@@ -8,9 +8,9 @@ Updated October 9, 2026. Record verified work separately from planned features.
 |---|---|
 | M1 API foundation | Implemented, reviewed and locally verified |
 | M1B repeatable-learning slice | Implemented; local verification recorded below |
-| M2 version evolution / remaining contract labs | Implemented and locally verified: compatibility plus interactive/reference Labs 2-5 |
+| M2 version evolution / remaining contract labs | Implemented, published and locally/hosted verified: compatibility plus interactive/reference Labs 2-5 |
 | M3 Postman/Newman parity | Not started |
-| M4 clean-install portability, hosted CI and presentation | Local clean-install verification done; hosted verification/publication pending |
+| M4 clean-install portability, hosted CI and presentation | Local/Windows/Ubuntu verification and source publication done early; broader presentation remains pending |
 
 ## M1 delivered
 
@@ -69,7 +69,7 @@ M1/M1B review is complete. Continue the bounded M2 learning expansion after the 
 
 The slice's reset, persistence, grading and interruption checks pass. Preserve those gates while expanding: [runner acceptance plan](../learning/runner-plan.md).
 
-The user-supplied GitHub remote is configured; no commits or publication yet. Personal attempt data remains ignored by design. Learner rehearsal/mastery remains user-owned and unverified.
+Source is now published to the user-approved GitHub destination; hosted evidence is recorded below. Personal attempt data remains ignored by design. Learner rehearsal/mastery remains user-owned and unverified.
 
 ## M1 full review and M1B implementation
 
@@ -169,3 +169,25 @@ Verification on Windows/Python 3.14.3:
 The final M2 cases also verify intended starter failures, shortcut rejection, seeded variant diversity, first/final revisions, assistance gates, exact averages/paused duration, wrong-answer completion, fresh resets, scope isolation, corrupt/versioned history, workspace errors and CLI exit behavior.
 
 M2 is locally complete for its bounded Lab 2-5 scope. The complete eight-lab interactive course, AI coach and Postman/Newman remain out of scope for this milestone. Hosted execution/publication is the next verification gate; local success is not a CI claim.
+
+## Source publication and hosted evidence
+
+Initial source commit: `f70f305342e45a691320e3670c1a5b7823a2acd6`, pushed normally to [the approved repository](https://github.com/tombeng027/api-contract-testing-suite). Only 78 intended source/test/config/documentation files were staged. Practice history, local reports, virtual environments and private job-search documents were excluded.
+
+[Hosted run 37922477474](https://github.com/tombeng027/api-contract-testing-suite/actions/runs/37922477474) completed successfully for that exact source commit:
+
+| Platform | Interpreter | Pytest result |
+|---|---|---|
+| Windows hosted | Python 3.14.7 | 160 passed in 28.39s |
+| Ubuntu hosted | Python 3.14.8 | 160 passed in 22.55s |
+
+Both jobs completed constrained non-editable installation, dependency checks, installed resources outside checkout, the full suite outside checkout, explicit compatibility verification and artifact upload.
+
+Downloaded both artifacts and matched ZIP SHA-256 digests:
+
+- Windows artifact 11612353288: `beacb2c7bdae4c04c4b9259dbff01adae0212a37ec421d8e97926d67c8c207cd`.
+- Ubuntu artifact 11611754634: `07ba4dd1ec35203d023bb277fb84849ef7f650997b1d6dddf07cdaabe7abf2a0`.
+
+Inspected retained HTML/JUnit evidence: each has 160 tests, zero failures/errors/skips, all 35 lifecycle logs ending with `app_stopped`, and the eight compatibility cases with expected exits `0,0,1,1,1,1,0,0`. JUnit suite durations are 28.372s and 22.541s respectively; the table uses pytest's displayed total duration. The artifacts include synthetic verification only and expire after seven days.
+
+This verifies the selected Ubuntu process-cleanup/path behavior as well as Windows regressions. It does not certify every possible subprocess, platform, Python 3.12/3.13 or user-written exercise. No user learning-achievement claim follows from reference-solution tests. M3 Postman/Newman is next; the full Lab 0-7 course and broader presentation remain pending.

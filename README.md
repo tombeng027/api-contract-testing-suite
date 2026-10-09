@@ -1,8 +1,10 @@
 # API Contract Testing Suite
 
+[![QA verification](https://github.com/tombeng027/api-contract-testing-suite/actions/workflows/qa.yml/badge.svg)](https://github.com/tombeng027/api-contract-testing-suite/actions/workflows/qa.yml)
+
 Personal QA learning and portfolio project: understand and test API response contracts, errors and compatibility as schemas evolve.
 
-**Status: M1/M1B reviewed; M2 compatibility and interactive Lab 2-5 track implemented and locally verified.** The current combined suite has 160 passing cases. Postman/Newman, the full Lab 0-7 course and hosted CI verification remain pending.
+**Status: M1/M1B reviewed; M2 implemented, published and verified on Windows/Ubuntu hosted CI.** The current combined suite has 160 passing cases on each runner. Postman/Newman and the full Lab 0-7 course remain pending.
 
 ## Implemented foundation
 
@@ -30,7 +32,7 @@ py -3.14 -m venv .venv
 
 Uses a non-editable installation. After changing application/schema source, rerun the install command. Constraints capture the verified environment's versions, not a hash-verified universal lockfile.
 
-Python metadata permits 3.12-3.14; only Windows/3.14.3 is verified. On Linux/macOS use `python3 -m venv .venv` and `.venv/bin/python`; those platforms remain unverified for this repository.
+Python metadata permits 3.12-3.14; executed versions are Windows 3.14.3 locally, Windows 3.14.7 and Ubuntu 3.14.8 in hosted CI. On Linux/macOS use `python3 -m venv .venv` and `.venv/bin/python`; macOS and Python 3.12/3.13 remain unverified.
 
 No browser download, Docker, cloud credentials or Repo 1 dependency is required. Installation needs internet/package availability; tests use localhost with environment proxies disabled.
 
@@ -62,6 +64,7 @@ Stop your manual server with Ctrl+C. It binds localhost only; do not deploy this
 ## Verified evidence and limitations
 
 - Current combined suite: **160 passed in 47.96s** outside checkout against the second clean non-editable environment; zero failures/errors/skips. Includes 37 M1B runner cases, 34 M2 learning cases, 26 compatibility cases, three consumer-policy cases and one failure-cleanup regression alongside the 59-case foundation.
+- [Verified hosted source run](https://github.com/tombeng027/api-contract-testing-suite/actions/runs/37922477474): Windows/Python 3.14.7 **160 passed in 28.39s**; Ubuntu/Python 3.14.8 **160 passed in 22.55s**. Both downloaded artifacts matched their SHA-256 digests; inspected JUnit, reports, all 35 shutdown logs and eight compatibility outcomes per runner.
 - Repeat checks now supersede stale passing scores; an infrastructure-error recheck cannot complete an attempt. Original pre-M2 v1 history was read without rewriting and retained its first/final scores.
 - Every M2 starter failed its intended objective checks; all four reference solutions passed. A full installed CLI run saved all 12 activities and score/check evidence, then released the writer lock. This was synthetic reference-driven verification, not learner achievement.
 - Synthetic full-slice CLI run verified saved answers/code evidence, first score 50% versus revised final 100%, review and writer-lock release.
@@ -74,7 +77,7 @@ Stop your manual server with Ctrl+C. It binds localhost only; do not deploy this
 
 The reviewed assertion-failure probe also stopped its owned server with zero teardown errors; all 35 ordinary/probe lifecycle logs ended in `app_stopped`. This verifies that selected failure path, not every possible failure.
 
-See [current progress/review](docs/progress.md). This is not hosted CI verification, a complete cross-platform portability gate, a mutation coverage score or a security audit.
+See [current progress/review](docs/progress.md). This verifies the selected Windows/Ubuntu Python 3.14 jobs, not every permitted runtime/platform, a mutation coverage percentage or a security audit.
 
 VS Code's test tool found no tests and Pylance reported missing pytest while selecting another parent-workspace interpreter. Explicit repo-venv commands are verified; editor selection/discovery is not claimed fixed. Open this repository directly and select `.venv\Scripts\python.exe`.
 
@@ -82,7 +85,7 @@ VS Code's test tool found no tests and Pylance reported missing pytest while sel
 
 - A small Postman collection with equivalent critical checks, run through Newman.
 - Lab 0/1/6/7 interactive assessments and the complete eight-lab course.
-- Lab 6/7 guides, broader failure-path evidence, cross-platform portability and actual hosted CI verification.
+- Lab 6/7 guides, broader failure-path evidence and additional runtime/platform portability.
 
 This complements the UI/API work-order project rather than duplicating its browser workflows. It is not a production service, security audit or universal compatibility analyzer.
 
