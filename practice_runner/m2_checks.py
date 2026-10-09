@@ -52,82 +52,115 @@ def check_lab(function: Callable[..., object], lab: int, price: int) -> list[dic
         ]
     else:
         raise ValueError(f"Unknown lab: {lab}")
-    results = []
-    for name, (arguments, expected) in zip(M2_CHECKS, cases, strict=True):
-        if lab == 5:
-            actual = function(*deepcopy(arguments))
-            passed = type(actual) is bool and actual is expected
-        else:
-            rejected = False
-            try:
-                function(*deepcopy(arguments))
-            except AssertionError:
-                rejected = True
-            passed = rejected is expected
-        results.append({"name": name, "passed": passed})
-    # Extra cases remain part of the required aggregate evidence, not a new score unit.
+    groups = {name: [case] for name, case in zip(M2_CHECKS, cases, strict=True)}
+    # Extra probes remain aggregate evidence, not additional score units.
     if lab == 2:
-        try:
-            function(200, {**product, "price_cents": str(price)}, price)
-        except AssertionError:
-            pass
-        else:
-            results[3]["passed"] = False
+        groups["wrong-type"].extend(
+            ((200, {**product, "price_cents": value}, price), True)
+            for value in (str(price), float(price), price + 0.5, None)
+        )
     if lab == 3:
+        groups["valid"].append(((200, {**product, "category": "DEMO"}, price), False))
+        groups["boundary"].extend(
+            ((200, {**product, "id": identity, "available": False}, price), False)
+            for identity in (1.0, 2147483647)
+        )
         invalid = [
             {**product, "price_cents": value} for value in (price + 0.5, str(price), True)
         ] + [
-            {**product, "id": value} for value in (0, True, 2147483648)
+            {**product, "id": value} for value in (0, True, 2147483648, "1", 1.5)
         ] + [
-            {**product, field: "   "} for field in ("sku", "name")
+            {**product, field: value} for field in ("sku", "name") for value in ("", "   ", 42)
+        ] + [
+            {**product, "available": value} for value in (0, None)
         ] + [
             {key: value for key, value in product.items() if key != field}
             for field in product
         ]
-        for changed in invalid:
-            try:
-                function(200, changed, price)
-            except AssertionError:
-                pass
-            else:
-                results[3]["passed"] = False
-        try:
-            function(404, product, price)
-        except AssertionError:
-            pass
-        else:
-            results[4]["passed"] = False
+        groups["wrong-type"].extend(((200, changed, price), True) for changed in invalid)
+        groups["wrong-value"].append(((404, product, price), True))
     if lab == 4:
         for field in ("code", "message"):
             changed = deepcopy(error)
             changed["error"][field] = "WRONG"
-            try:
-                function(404, changed, expected_error)
-            except AssertionError:
-                pass
-            else:
-                results[4]["passed"] = False
+            groups["wrong-value"].append(((404, changed, expected_error), True))
     if lab == 5:
+        groups["valid"].extend([
+            (({**product, "price_cents": 0}, "v1"), True),
+            (({**product, "price_cents": price + 1}, "v1"), True),
+            (({**product, "price_cents": float(price)}, "v1"), True),
+            (({**v2, "category": "DEMO", "price": {
+                "amount_cents": price, "currency": "USD", "metadata": "DEMO",
+            }}, "v2"), True),
+            (({**v2, "price": {"amount_cents": float(price), "currency": "USD"}}, "v2"), True),
+        ])
+        for version, payload in (("v1", product), ("v2", v2)):
+            groups["boundary"].extend(
+                (({**payload, "id": identity, "available": False}, version), True)
+                for identity in (1.0, 2147483647)
+            )
+            groups["missing"].extend(
+                (({key: value for key, value in payload.items() if key != field}, version), False)
+                for field in payload
+            )
+            groups["wrong-type"].extend(
+                (({**payload, field: value}, version), False)
+                for field, values in (
+                    ("id", ("1", True, 1.5)),
+                    ("sku", (42, None)), ("name", (42, None)),
+                    ("available", ("true", 0, None)),
+                ) for value in values
+            )
+            groups["wrong-type"].extend(
+                ((value, version), False) for value in (None, [], "product")
+            )
+            groups["wrong-value"].extend(
+                (({**payload, field: value}, version), False)
+                for field, values in (
+                    ("id", (0, 2147483648)), ("sku", ("", "   ")), ("name", ("", "   ")),
+                ) for value in values
+            )
+        groups["wrong-type"].extend(
+            (({**product, "price_cents": value}, "v1"), False)
+            for value in (True, price + 0.5, None)
+        )
+        groups["wrong-value"].append((({**product, "price_cents": -1}, "v1"), False))
         invalid_prices = [
             {"amount_cents": 0, "currency": "EUR"},
             {"amount_cents": "0", "currency": "USD"},
             {"amount_cents": True, "currency": "USD"},
-            {"amount_cents": 0}, {"currency": "USD"},
+            {"amount_cents": price + 0.5, "currency": "USD"},
+            {"amount_cents": None, "currency": "USD"},
+            {"amount_cents": 0, "currency": None},
+            {"amount_cents": 0}, {"currency": "USD"}, None, [], 0,
         ]
-        for changed_price in invalid_prices:
-            if function({**v2, "price": changed_price}, "v2") is not False:
-                results[4]["passed"] = False
+        groups["wrong-type"].extend(
+            (({**v2, "price": changed_price}, "v2"), False) for changed_price in invalid_prices
+        )
         removed = {key: value for key, value in product.items() if key != "price_cents"}
-        for changed in (removed, {**removed, "cost_cents": price}):
-            if function(changed, "v1") is not False:
-                results[2]["passed"] = False
-        # A semantic change remains structurally valid for this selected consumer.
-        if function({**product, "price_cents": price + 1}, "v1") is not True:
-            results[0]["passed"] = False
+        groups["missing"].append((({**removed, "cost_cents": price}, "v1"), False))
         try:
-            function(product, "v3")
+            function(deepcopy(product), "v3")
         except ValueError:
-            pass
+            unknown_rejected = True
         else:
-            results[4]["passed"] = False
+            unknown_rejected = False
+    results = []
+    for name, probes in groups.items():
+        passed = True
+        for arguments, expected in probes:
+            if lab == 5:
+                actual = function(*deepcopy(arguments))
+                matched = type(actual) is bool and actual is expected
+            else:
+                rejected = False
+                try:
+                    function(*deepcopy(arguments))
+                except AssertionError:
+                    rejected = True
+                matched = rejected is expected
+            passed = passed and matched
+        if lab == 5 and name == "wrong-value":
+            passed = passed and unknown_rejected
+        results.append({"name": name, "passed": passed})
     return results

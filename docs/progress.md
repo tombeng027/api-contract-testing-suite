@@ -191,3 +191,27 @@ Downloaded both artifacts and matched ZIP SHA-256 digests:
 Inspected retained HTML/JUnit evidence: each has 160 tests, zero failures/errors/skips, all 35 lifecycle logs ending with `app_stopped`, and the eight compatibility cases with expected exits `0,0,1,1,1,1,0,0`. JUnit suite durations are 28.372s and 22.541s respectively; the table uses pytest's displayed total duration. The artifacts include synthetic verification only and expire after seven days.
 
 This verifies the selected Ubuntu process-cleanup/path behavior as well as Windows regressions. It does not certify every possible subprocess, platform, Python 3.12/3.13 or user-written exercise. No user learning-achievement claim follows from reference-solution tests. M3 Postman/Newman is next; the full Lab 0-7 course and broader presentation remain pending.
+
+## Post-M2 review and assessment hardening
+
+The published 160-case baseline passed again, but direct review reproduced three incorrect learner implementations receiving credit: Lab 2 allowed an integral float despite its exact Python-int requirement; Lab 3 rejected permitted additive fields; Lab 5 checked prices without full product identity/availability and accepted only zero-valued v2 prices. Overall prediction counters also reported zero for four correctly answered M2 predictions, although task-level counts were correct.
+
+Added regressions first: all five selected checker/statistics cases failed against the installed old package. Hardened the selected behavior probes without weakening the consumer schemas or changing the prompt/point maximum. Prediction aggregation now enumerates every selected prediction task and uses its first submission in completed attempts.
+
+New M2 attempts explicitly snapshot assessment/checker version 2 from the packaged manifest. Version-1 M2 and original M1B records remain readable, with no rewriting/regrading; old/new assessment averages stay separate. Mixed assessment/checker versions are rejected, and historical M2 sessions cannot submit against the new checker. Status/history now expose both versions. Content/generator versions remain 1.
+
+Local Windows/Python 3.14.3 verification after hardening:
+
+| Gate | Result |
+|---|---|
+| Practice regressions before final additional matrix/count cases | 115 passed in 33.13s |
+| Full installed suite outside checkout | **214 passed in 59.36s**, zero failures/errors/skips; preceding integration run also passed 214 in 63.53s |
+| Composition | 59 foundation + 1 failure cleanup + 37 M1B runner + 88 M2 learning + 26 compatibility + 3 consumer policy |
+| Selected regression additions | 54 cases covering false passes, required/invalid fields, valid-payload rejection, history/version separation and focused totals |
+| Starters/reference solutions | All four starters fail; all four reference solutions pass, including full CLI completion |
+| Compatibility | All eight exact expected outcomes verified separately |
+| Resources/dependencies/lifecycle | Installed package resources verified; `pip check` passed; all 35 lifecycle logs ended with `app_stopped` |
+| Historical readback | Actual pre-M2 schema-1 JSON unchanged, first 0/final 100; version-1 M2 synthetic history/CLI review/stats unchanged and separated from version 2 |
+| Final documentation/diff review | 98 relative paths resolved; `git diff --check` passed |
+
+Also replaced the CLI integration test's blocking startup read with a bounded workspace-readiness deadline. The implementation does not add AI, M3, automatic history migration or resume. The hosted 160-case evidence above belongs to the pre-hardening commits; local 214-case success alone is not a claim of hosted verification for these changes.

@@ -5,6 +5,8 @@ import json
 import sys
 from pathlib import Path
 
+from practice_runner.models import M2_CHECKER_VERSION, VERSION
+
 
 def main() -> None:
     source, price_text, result_path = sys.argv[1:4]
@@ -56,7 +58,7 @@ def main() -> None:
         outcome = "infrastructure_error"
         feedback = f"{type(error).__name__}: {error}"
     Path(result_path).write_text(json.dumps({
-        "checker_version": "1", "lab": lab,
+        "checker_version": VERSION if lab is None else M2_CHECKER_VERSION, "lab": lab,
         "outcome": outcome, "feedback": feedback, "checks": checks,
     }), encoding="utf-8")
 

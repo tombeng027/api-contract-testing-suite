@@ -62,10 +62,10 @@ Labs 2-4 return normally for accepted examples and raise **AssertionError** for 
 
 Five aggregate evidence groups (`valid`, `boundary`, `missing`, `wrong-type`, `wrong-value`) must all pass. Groups can include multiple probes; they are not five score units. The checker tests valid and invalid behavior:
 
-- Lab 2: generated correct/zero prices, status, wrong value, string and boolean prices.
-- Lab 3: integral float/zero acceptance, all required fields, price type/fraction/negative bounds, identity bounds, nonblank strings, availability type and status.
+- Lab 2: generated correct/zero prices, status, wrong value, string, boolean, integral/fractional float and null prices.
+- Lab 3: integral float/zero acceptance, additive field tolerance, all required fields, price type/fraction/negative bounds, identity bounds, nonblank strings, availability type and status.
 - Lab 4: two expected error families, additive metadata, missing/wrong-type fields, wrong status/code/message.
-- Lab 5: additive and schema-valid semantic changes, explicit v2 zero acceptance, old-consumer removal/rename/v2 failures, wrong price types, malformed nested price/currency and unknown version rejection.
+- Lab 5: v1/v2 zero, positive and integral-float prices; additive fields including nested v2 metadata; schema-valid semantic changes; required identity/price/availability fields; identity bounds/types, nonblank strings and boolean availability; non-object payload rejection; old-consumer removal/rename/v2 failures; malformed nested price/currency and unknown version rejection.
 
 JSON Schema treats integral numbers mathematically; Lab 2 deliberately tests exact Python integer values. The tasks assess different expectations, not one interchangeable policy.
 
@@ -80,6 +80,10 @@ These are selected synthetic probes, not exhaustive verification or proof of mas
 ```
 
 History/review support both tracks. `stats` defaults to the original M1B track; explicitly select M2. Groups separate track, assessment version and full/focused scope. Completed-only averages show first/final scores, unassisted samples and practice time; task-level observations show first/final correct counts. Incomplete/error attempts remain visible but do not distort those averages. `null` means N/A.
+
+Overall `prediction_first_answered` and `prediction_first_correct` count prediction **tasks** in completed attempts, using each task's first submission, not the number of attempts or revisions. A full M2 attempt contributes four answered predictions; a focused attempt contributes one. Task-level totals agree with those counters.
+
+New M2 attempts use assessment/checker version **2**, strengthening the selected probes without changing the prompts, generator or eight-point maximum. Status/history/review show the version; statistics keep version-1 and version-2 averages separate. Existing version-1 M2 records remain readable with their original scores and evidence: they are not rewritten or retroactively regraded. Historical M2 sessions cannot submit against the new checker; start a fresh attempt. M1B remains assessment/checker version 1.
 
 M2 records use schema 2 with a retained generated lab/manifest snapshot and immutable identity/content. Existing schema-1 M1B attempts remain readable without rewriting. Unsupported/corrupt records produce visible errors and a nonzero summary exit, even if they belong to the other track.
 

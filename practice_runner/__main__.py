@@ -19,6 +19,7 @@ def display(value: object) -> None:
 def summary(record: Attempt) -> dict[str, object]:
     return {
         "attempt_id": record.attempt_id, "track": record.track, "scope": record.scope,
+        "assessment_version": record.assessment_version, "checker_version": record.checker_version,
         "seed": record.seed, "status": record.status,
         "first_score": record.score(first=True) if record.status == "completed" else None,
         "final_score": record.score() if record.status == "completed" else None,

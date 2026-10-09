@@ -198,8 +198,8 @@ def statistics(records: list[Attempt]) -> list[dict[str, object]]:
             return sum(numbers) / len(numbers) if numbers else None
 
         predictions = [
-            record.submissions("prediction")[0] for record in completed
-            if record.submissions("prediction")
+            record.submissions(task)[0] for record in completed for task in record.tasks
+            if task_kind(task) == "prediction" and record.submissions(task)
         ]
         result.append({
             "track": key[0], "assessment_version": key[1], "scope": key[2],

@@ -9,7 +9,8 @@ from pydantic import model_validator
 from practice_runner.engine import PracticeError, Session, asset, now
 from practice_runner.exercise import check_code
 from practice_runner.models import (
-    Attempt, Event, LabSpec, M2_TRACK, M2Variant, StrictRecord, TASKS, digest, task_kind,
+    Attempt, Event, LabSpec, M2_ASSESSMENT_VERSION, M2_CHECKER_VERSION, M2_TRACK,
+    M2Variant, StrictRecord, TASKS, digest, task_kind,
 )
 from practice_runner.storage import StorageError, Store, safe_path
 
@@ -32,13 +33,18 @@ class LabContent(StrictRecord):
 class Manifest(StrictRecord):
     track: Literal["api-contracts-m2"]
     content_version: Literal["1"]
-    assessment_version: Literal["1"]
+    assessment_version: Literal["2"]
     generator_version: Literal["1"]
-    checker_version: Literal["1"]
+    checker_version: Literal["2"]
     labs: dict[str, LabContent]
 
     @model_validator(mode="after")
     def coherent(self) -> "Manifest":
+        if (
+            self.assessment_version != M2_ASSESSMENT_VERSION
+            or self.checker_version != M2_CHECKER_VERSION
+        ):
+            raise ValueError("Manifest versions do not match the installed M2 checker")
         if list(self.labs) != ["2", "3", "4", "5"]:
             raise ValueError("M2 manifest must contain Labs 2-5 in order")
         for content in self.labs.values():
@@ -95,6 +101,10 @@ def create_m2_attempt(store: Store, seed: int, lab: int | None = None) -> Attemp
     timestamp = now()
     record = Attempt.model_validate({
         "record_schema_version": 2, "attempt_id": uuid.uuid4().hex, "track": M2_TRACK,
+        "content_version": content.content_version,
+        "assessment_version": content.assessment_version,
+        "generator_version": content.generator_version,
+        "checker_version": content.checker_version,
         "scope": "full" if lab is None else f"lab-{lab}",
         "seed": seed, "variant": variant.model_dump(), "tasks": tasks, "points": points,
         "manifest_digest": digest(json.dumps(snapshot, sort_keys=True)),
@@ -127,6 +137,8 @@ class M2Session(Session):
         return getattr(spec, "exercise" if task_kind(task) == "code" else task_kind(task))
 
     def submit(self, task: str, answer: str = "") -> Event:
+        if self.record.checker_version != M2_CHECKER_VERSION:
+            raise PracticeError("Historical M2 assessment is read-only; start a fresh version-2 attempt")
         spec = self.spec(task)
         kind = task_kind(task)
         if kind == "prediction":

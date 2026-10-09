@@ -11,6 +11,8 @@ TRACK = "api-foundations-m1b"
 VERSION = "1"
 TASKS = ("prediction", "explanation", "code")
 M2_TRACK = "api-contracts-m2"
+M2_ASSESSMENT_VERSION = "2"
+M2_CHECKER_VERSION = "2"
 M2_CHECKS = ("valid", "boundary", "missing", "wrong-type", "wrong-value")
 STATUS = Literal["in_progress", "completed", "abandoned", "errored"]
 OUTCOME = Literal["passed", "learner_failure", "infrastructure_error", "ungraded"]
@@ -110,9 +112,9 @@ class Attempt(StrictRecord):
     attempt_id: str
     track: Literal["api-foundations-m1b", "api-contracts-m2"] = TRACK
     content_version: Literal["1"] = VERSION
-    assessment_version: Literal["1"] = VERSION
+    assessment_version: Literal["1", "2"] = VERSION
     generator_version: Literal["1"] = VERSION
-    checker_version: Literal["1"] = VERSION
+    checker_version: Literal["1", "2"] = VERSION
     scope: Literal["slice", "prediction", "explanation", "code", "full", "lab-2", "lab-3", "lab-4", "lab-5"] = "slice"
     seed: int = Field(ge=0, le=2**32 - 1)
     variant: M2Variant | Variant
@@ -133,6 +135,8 @@ class Attempt(StrictRecord):
         if re.fullmatch(r"[0-9a-f]{32}", self.attempt_id) is None:
             raise ValueError("Invalid attempt ID")
         if self.track == M2_TRACK:
+            if self.assessment_version != self.checker_version:
+                raise ValueError("M2 assessment/checker versions must match")
             if self.record_schema_version != 2 or not isinstance(self.variant, M2Variant):
                 raise ValueError("M2 requires schema 2 and its manifest snapshot")
             labs = ["2", "3", "4", "5"] if self.scope == "full" else [self.scope.removeprefix("lab-")]
@@ -142,6 +146,8 @@ class Attempt(StrictRecord):
                 raise ValueError("Lab snapshot does not match scope")
             expected = [f"{lab}.{kind}" for lab in labs for kind in TASKS]
         else:
+            if self.assessment_version != VERSION or self.checker_version != VERSION:
+                raise ValueError("M1B requires its original assessment/checker versions")
             if self.record_schema_version != 1 or isinstance(self.variant, M2Variant):
                 raise ValueError("M1B requires schema 1 and its original variant")
             if self.scope not in ("slice", *TASKS):

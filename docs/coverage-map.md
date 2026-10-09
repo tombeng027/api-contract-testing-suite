@@ -24,6 +24,8 @@ Objective coding tasks must accept specified valid examples and reject specified
 
 The [M2 regressions](../tests/test_m2_learning.py) cover all four starters/reference solutions, shortcuts, full CLI completion, full/focused seed equivalence, fresh-work preservation, schema-1/2 coexistence, invalid records, exact averages/paused timing and failed repeat checks. The [M2 guide](../learning/m2-track.md) lists the selected behavior probes and their limits.
 
+Assessment/checker version 2 adds regression evidence for the three review false passes, v1/v2 identity/availability omissions and invalid values, rejection of valid zero/positive/integral/additive examples, full/focused prediction totals, old/new version separation and historical readback. CLI integration waits for its workspace with a bounded deadline, not an unbounded startup `readline()`. This is selected behavior coverage, not a universal proof that arbitrary learner code is correct.
+
 Personal `.practice-data/` never belongs in commits or CI artifacts. Local exercise execution is trusted code, not sandboxed submissions or anti-cheating verification.
 
 ## Deliberate gaps

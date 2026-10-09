@@ -1,9 +1,9 @@
 {
   "track": "api-contracts-m2",
   "content_version": "1",
-  "assessment_version": "1",
+  "assessment_version": "2",
   "generator_version": "1",
-  "checker_version": "1",
+  "checker_version": "2",
   "labs": {
     "2": {
       "topic": "meaningful-assertions",

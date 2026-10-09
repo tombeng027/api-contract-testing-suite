@@ -4,7 +4,7 @@
 
 Personal QA learning and portfolio project: understand and test API response contracts, errors and compatibility as schemas evolve.
 
-**Status: M1/M1B reviewed; M2 implemented, published and verified on Windows/Ubuntu hosted CI.** The current combined suite has 160 passing cases on each runner. Postman/Newman and the full Lab 0-7 course remain pending.
+**Status: M1/M1B and bounded M2 implemented; M2 scoring hardening locally verified.** The current combined suite has 214 passing cases locally; the pre-hardening 160-case baseline was published and verified on Windows/Ubuntu hosted CI. Postman/Newman and the full Lab 0-7 course remain pending.
 
 ## Implemented foundation
 
@@ -63,10 +63,12 @@ Stop your manual server with Ctrl+C. It binds localhost only; do not deploy this
 
 ## Verified evidence and limitations
 
-- Current combined suite: **160 passed in 47.96s** outside checkout against the second clean non-editable environment; zero failures/errors/skips. Includes 37 M1B runner cases, 34 M2 learning cases, 26 compatibility cases, three consumer-policy cases and one failure-cleanup regression alongside the 59-case foundation.
+- Current hardened combined suite: **214 passed in 59.36s** outside checkout against the non-editable repository environment; zero failures/errors/skips. Includes 37 M1B runner cases, 88 M2 learning cases, 26 compatibility cases, three consumer-policy cases and one failure-cleanup regression alongside the 59-case foundation.
+- Pre-hardening clean-install baseline: **160 passed in 47.96s** outside checkout against the second clean non-editable environment.
 - [Verified hosted source run](https://github.com/tombeng027/api-contract-testing-suite/actions/runs/37922477474): Windows/Python 3.14.7 **160 passed in 28.39s**; Ubuntu/Python 3.14.8 **160 passed in 22.55s**. Both downloaded artifacts matched their SHA-256 digests; inspected JUnit, reports, all 35 shutdown logs and eight compatibility outcomes per runner.
 - Repeat checks now supersede stale passing scores; an infrastructure-error recheck cannot complete an attempt. Original pre-M2 v1 history was read without rewriting and retained its first/final scores.
 - Every M2 starter failed its intended objective checks; all four reference solutions passed. A full installed CLI run saved all 12 activities and score/check evidence, then released the writer lock. This was synthetic reference-driven verification, not learner achievement.
+- Review false passes for exact Python integer prices, additive tolerance and full v1/v2 compatibility now have regressions. New M2 assessment/checker version 2 keeps historical version-1 scores separate rather than regrading them. Overall prediction totals now count all selected tasks and agree with task-level counts.
 - Synthetic full-slice CLI run verified saved answers/code evidence, first score 50% versus revised final 100%, review and writer-lock release.
 - Initial default suite: 59 passed in 18.80s; follow-up default suite: 59 passed in 18.50s.
 - Final suite outside the checkout using importlib mode and installed target: 59 passed in 18.50s, zero failures/errors/skips.

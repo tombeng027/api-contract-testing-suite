@@ -7,7 +7,7 @@ import uuid
 from pathlib import Path
 
 from practice_runner.storage import StorageError, safe_path
-from practice_runner.models import M2_CHECKS
+from practice_runner.models import M2_CHECKER_VERSION, M2_CHECKS, VERSION
 
 OUTPUT_LIMIT = 4096
 
@@ -76,7 +76,8 @@ def check_code(
     try:
         result = json.loads(safe_path(evidence, "result.json").read_text(encoding="utf-8"))
         if (
-            not isinstance(result, dict) or result.get("checker_version") != "1"
+            not isinstance(result, dict)
+            or result.get("checker_version") != (VERSION if lab is None else M2_CHECKER_VERSION)
             or result.get("lab") != lab
             or result.get("outcome") not in ("passed", "learner_failure", "infrastructure_error")
             or not isinstance(result.get("feedback"), str)
