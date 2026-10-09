@@ -25,6 +25,22 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.14"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - name: Install pinned project-local Postman CLI
+        run: |
+          npm ci
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          npm audit
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          if ($IsWindows) {
+            $binary = Join-Path $env:GITHUB_WORKSPACE "node_modules/@postman/pm-bin-windows-x64/bin/postman.exe"
+          } else {
+            $binary = Join-Path $env:GITHUB_WORKSPACE "node_modules/@postman/pm-bin-linux-x64/bin/postman"
+          }
+          "CATALOG_POSTMAN_CLI=$binary" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
       - name: Install constrained non-editable package
         run: |
           python -m pip install -c constraints.txt ".[test]"
@@ -63,3 +79,4 @@ jobs:
             artifacts/installed-packages.txt
             artifacts/lifecycle/
             artifacts/compatibility/
+            artifacts/postman-parity/

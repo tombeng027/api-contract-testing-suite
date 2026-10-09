@@ -1,6 +1,6 @@
 # Guided API-testing learning track
 
-**Status: Lab 0-5 reference guides, the M1B practice slice and the M2 interactive Lab 2-5 track are available. The full Lab 0-7 interactive course remains unimplemented.**
+**Status: Lab 0-6 reference guides, the M1B practice slice and the M2 interactive Lab 2-5 track are available. Lab 6 is manual, with no runner scoring; the full Lab 0-7 interactive course remains unimplemented.**
 
 Goal: turn conceptual understanding into checks you can write, debug and explain. Work through one small task at a time; do not memorize a completed framework.
 
@@ -20,14 +20,16 @@ Before a run, write down what you expect. Afterward, use the actual response/tes
 | 3. JSON Schema | Which required field, type or boundary failed, and where in the response did it fail? |
 | 4. Error contracts | Is this an expected rejection, a contract defect or a test-environment failure? |
 | 5. Compatibility | Which consumer expectation breaks when the response changes, and what does schema validation miss? |
-| 6. Postman/Newman parity | How do I express and run the same critical expectation in another tool? |
+| 6. Postman CLI parity | How do I express and run the same critical expectation in another tool? |
 | 7. Investigation and explanation | Can I reproduce a precise failure and explain the evidence, cause and limitation? |
 
 Each implemented lab will provide an exact command, expected exit behavior, a small exercise, a separate reference solution and common incorrect approaches.
 
 Start with [Lab 0: test anatomy](labs/00-test-anatomy.md), then [Lab 1: HTTP exchange](labs/01-http-exchange.md). These guides use manual prediction notes and verified reference commands. The separate [M1B practice slice](practice-slice.md) provides one prediction, one saved explanation and one editable code task with fresh workspaces and objective checks.
 
-Continue with [Lab 2: meaningful assertions](labs/02-meaningful-assertions.md), [Lab 3: JSON Schema](labs/03-json-schema.md), [Lab 4: error contracts](labs/04-error-contracts.md) and [Lab 5: compatibility](labs/05-compatibility.md). Their reference solutions are linked separately in each guide. The [M2 interactive track](m2-track.md) provides full/focused attempts, numeric Lab 2-5 selection, saved explanations and objective code checks. Reading a Markdown solution is not a logged assistance event. Labs 6/7 remain planned.
+Continue with [Lab 2: meaningful assertions](labs/02-meaningful-assertions.md), [Lab 3: JSON Schema](labs/03-json-schema.md), [Lab 4: error contracts](labs/04-error-contracts.md) and [Lab 5: compatibility](labs/05-compatibility.md). Their reference solutions are linked separately in each guide. The [M2 interactive track](m2-track.md) provides full/focused attempts, numeric Lab 2-5 selection, saved explanations and objective code checks. Reading a Markdown solution is not a logged assistance event.
+
+[Lab 6: Postman parity](labs/06-postman-parity.md) adds manual prediction, equivalent assertions, a local CLI run and a controlled wrong-price exercise. Automatic Lab 6 persistence/scoring is deferred by the [approved tool decision](../docs/postman-parity.md); there is no `--lab 6` command. Lab 7 remains planned.
 
 ## Repeatable attempts
 

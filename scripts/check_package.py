@@ -5,12 +5,14 @@ from pathlib import Path
 import catalog_api
 import contracts
 import practice_runner
+import postman
 from jsonschema import Draft202012Validator
 from practice_runner.m2 import manifest
+from postman.runner import collection, resource
 
 
 def main() -> None:
-    for module in (catalog_api, contracts, practice_runner):
+    for module in (catalog_api, contracts, practice_runner, postman):
         if module.__file__ is None:
             raise RuntimeError(f"Package location unavailable: {module.__name__}")
         location = Path(module.__file__).resolve()
@@ -32,7 +34,11 @@ def main() -> None:
     ):
         text = files("practice_runner").joinpath("assets", f"{name}.py.txt").read_text(encoding="utf-8")
         compile(text, f"{name}.py.txt", "exec")
-    print("Packaged schemas, fixtures, M1B/M2 exercises and M2 manifest verified.")
+    assert json.loads(resource("catalog.postman_collection.json")) == collection(
+        json.loads(resource("requests.json")), resource("checks.js"),
+    )
+    json.loads(resource("catalog.postman_environment.json"))
+    print("Packaged schemas, fixtures, M1B/M2 resources and portable Postman collection verified.")
 
 
 if __name__ == "__main__":

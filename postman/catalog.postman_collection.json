@@ -1,0 +1,272 @@
+{
+  "info": {
+    "name": "Synthetic Catalog Critical Contracts",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8001"
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "const expected = JSON.parse(pm.variables.get(\"expected\"));",
+          "const payload = pm.response.json();",
+          "",
+          "function object(value) {",
+          "    pm.expect(value).to.be.an(\"object\");",
+          "    pm.expect(value).not.to.equal(null);",
+          "    pm.expect(Array.isArray(value)).to.equal(false);",
+          "}",
+          "",
+          "function product(value) {",
+          "    object(value);",
+          "    pm.expect(value.id).to.be.a(\"number\");",
+          "    pm.expect(Number.isInteger(value.id)).to.equal(true);",
+          "    pm.expect(value.id).to.be.within(1, 2147483647);",
+          "    for (const key of [\"sku\", \"name\"]) {",
+          "        pm.expect(value[key]).to.be.a(\"string\");",
+          "        pm.expect(/\\S/.test(value[key])).to.equal(true);",
+          "    }",
+          "    pm.expect(value.price_cents).to.be.a(\"number\");",
+          "    pm.expect(Number.isInteger(value.price_cents)).to.equal(true);",
+          "    pm.expect(value.price_cents).to.be.at.least(0);",
+          "    pm.expect(value.available).to.be.a(\"boolean\");",
+          "}",
+          "",
+          "pm.test(\"status\", function () {",
+          "    pm.expect(pm.response.code).to.equal(expected.status);",
+          "});",
+          "pm.test(\"media-type\", function () {",
+          "    const header = pm.response.headers.get(\"Content-Type\");",
+          "    pm.expect(header).to.be.a(\"string\");",
+          "    pm.expect(header.split(\";\")[0].trim().toLowerCase()).to.equal(\"application/json\");",
+          "});",
+          "pm.test(\"schema\", function () {",
+          "    if (expected.kind === \"product\") {",
+          "        product(payload);",
+          "    } else if (expected.kind === \"list\") {",
+          "        pm.expect(payload).to.be.an(\"array\");",
+          "        payload.forEach(product);",
+          "    } else if (expected.kind === \"error\") {",
+          "        object(payload);",
+          "        object(payload.error);",
+          "        pm.expect(payload.error.code).to.be.oneOf([\"PRODUCT_NOT_FOUND\", \"INVALID_REQUEST\"]);",
+          "        pm.expect(payload.error.message).to.be.a(\"string\");",
+          "        pm.expect(/\\S/.test(payload.error.message)).to.equal(true);",
+          "    } else {",
+          "        throw new Error(\"Unknown expected response kind\");",
+          "    }",
+          "});",
+          "pm.test(\"known-values\", function () {",
+          "    const keys = [\"id\", \"sku\", \"name\", \"price_cents\", \"available\"];",
+          "    function exact(value, reference) {",
+          "        for (const key of keys) {",
+          "            pm.expect(value[key], key).to.equal(reference[key]);",
+          "        }",
+          "    }",
+          "    if (expected.kind === \"product\") {",
+          "        exact(payload, expected.value);",
+          "    } else if (expected.kind === \"list\") {",
+          "        pm.expect(payload.length).to.equal(expected.value.length);",
+          "        expected.value.forEach((value, index) => exact(payload[index], value));",
+          "    } else if (expected.kind === \"error\") {",
+          "        pm.expect(payload.error.code).to.equal(expected.value.error.code);",
+          "        pm.expect(payload.error.message).to.equal(expected.value.error.message);",
+          "    } else {",
+          "        throw new Error(\"Unknown expected response kind\");",
+          "    }",
+          "});",
+          ""
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "product-one",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/v1/products/1"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.variables.set('expected', \"{\\\"status\\\":200,\\\"kind\\\":\\\"product\\\",\\\"value\\\":{\\\"id\\\":1,\\\"sku\\\":\\\"DEMO-001\\\",\\\"name\\\":\\\"Inspection kit\\\",\\\"price_cents\\\":2500,\\\"available\\\":true}}\");"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "product-zero",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/v1/products/2"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.variables.set('expected', \"{\\\"status\\\":200,\\\"kind\\\":\\\"product\\\",\\\"value\\\":{\\\"id\\\":2,\\\"sku\\\":\\\"DEMO-002\\\",\\\"name\\\":\\\"Replacement seal\\\",\\\"price_cents\\\":0,\\\"available\\\":false}}\");"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "all-products",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/v1/products"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.variables.set('expected', \"{\\\"status\\\":200,\\\"kind\\\":\\\"list\\\",\\\"value\\\":[{\\\"id\\\":1,\\\"sku\\\":\\\"DEMO-001\\\",\\\"name\\\":\\\"Inspection kit\\\",\\\"price_cents\\\":2500,\\\"available\\\":true},{\\\"id\\\":2,\\\"sku\\\":\\\"DEMO-002\\\",\\\"name\\\":\\\"Replacement seal\\\",\\\"price_cents\\\":0,\\\"available\\\":false},{\\\"id\\\":3,\\\"sku\\\":\\\"DEMO-003\\\",\\\"name\\\":\\\"Test gauge\\\",\\\"price_cents\\\":1099,\\\"available\\\":true}]}\");"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "available-products",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/v1/products?available=true"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.variables.set('expected', \"{\\\"status\\\":200,\\\"kind\\\":\\\"list\\\",\\\"value\\\":[{\\\"id\\\":1,\\\"sku\\\":\\\"DEMO-001\\\",\\\"name\\\":\\\"Inspection kit\\\",\\\"price_cents\\\":2500,\\\"available\\\":true},{\\\"id\\\":3,\\\"sku\\\":\\\"DEMO-003\\\",\\\"name\\\":\\\"Test gauge\\\",\\\"price_cents\\\":1099,\\\"available\\\":true}]}\");"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "unavailable-products",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/v1/products?available=false"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.variables.set('expected', \"{\\\"status\\\":200,\\\"kind\\\":\\\"list\\\",\\\"value\\\":[{\\\"id\\\":2,\\\"sku\\\":\\\"DEMO-002\\\",\\\"name\\\":\\\"Replacement seal\\\",\\\"price_cents\\\":0,\\\"available\\\":false}]}\");"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "missing-product",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/v1/products/2147483647"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.variables.set('expected', \"{\\\"status\\\":404,\\\"kind\\\":\\\"error\\\",\\\"value\\\":{\\\"error\\\":{\\\"code\\\":\\\"PRODUCT_NOT_FOUND\\\",\\\"message\\\":\\\"Product not found\\\"}}}\");"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "invalid-id",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/v1/products/0"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.variables.set('expected', \"{\\\"status\\\":422,\\\"kind\\\":\\\"error\\\",\\\"value\\\":{\\\"error\\\":{\\\"code\\\":\\\"INVALID_REQUEST\\\",\\\"message\\\":\\\"Invalid request\\\"}}}\");"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "invalid-filter",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/v1/products?available=True"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.variables.set('expected', \"{\\\"status\\\":422,\\\"kind\\\":\\\"error\\\",\\\"value\\\":{\\\"error\\\":{\\\"code\\\":\\\"INVALID_REQUEST\\\",\\\"message\\\":\\\"Invalid request\\\"}}}\");"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "duplicate-filter",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/v1/products?available=true&available=true"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.variables.set('expected', \"{\\\"status\\\":422,\\\"kind\\\":\\\"error\\\",\\\"value\\\":{\\\"error\\\":{\\\"code\\\":\\\"INVALID_REQUEST\\\",\\\"message\\\":\\\"Invalid request\\\"}}}\");"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "unknown-query",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/v1/products?other=demo"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.variables.set('expected', \"{\\\"status\\\":422,\\\"kind\\\":\\\"error\\\",\\\"value\\\":{\\\"error\\\":{\\\"code\\\":\\\"INVALID_REQUEST\\\",\\\"message\\\":\\\"Invalid request\\\"}}}\");"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

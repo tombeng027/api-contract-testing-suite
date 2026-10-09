@@ -1,0 +1,12 @@
+[
+  {"name":"product-one","path":"/v1/products/1","expected":{"status":200,"kind":"product","value":{"id":1,"sku":"DEMO-001","name":"Inspection kit","price_cents":2500,"available":true}}},
+  {"name":"product-zero","path":"/v1/products/2","expected":{"status":200,"kind":"product","value":{"id":2,"sku":"DEMO-002","name":"Replacement seal","price_cents":0,"available":false}}},
+  {"name":"all-products","path":"/v1/products","expected":{"status":200,"kind":"list","value":[{"id":1,"sku":"DEMO-001","name":"Inspection kit","price_cents":2500,"available":true},{"id":2,"sku":"DEMO-002","name":"Replacement seal","price_cents":0,"available":false},{"id":3,"sku":"DEMO-003","name":"Test gauge","price_cents":1099,"available":true}]}},
+  {"name":"available-products","path":"/v1/products?available=true","expected":{"status":200,"kind":"list","value":[{"id":1,"sku":"DEMO-001","name":"Inspection kit","price_cents":2500,"available":true},{"id":3,"sku":"DEMO-003","name":"Test gauge","price_cents":1099,"available":true}]}},
+  {"name":"unavailable-products","path":"/v1/products?available=false","expected":{"status":200,"kind":"list","value":[{"id":2,"sku":"DEMO-002","name":"Replacement seal","price_cents":0,"available":false}]}},
+  {"name":"missing-product","path":"/v1/products/2147483647","expected":{"status":404,"kind":"error","value":{"error":{"code":"PRODUCT_NOT_FOUND","message":"Product not found"}}}},
+  {"name":"invalid-id","path":"/v1/products/0","expected":{"status":422,"kind":"error","value":{"error":{"code":"INVALID_REQUEST","message":"Invalid request"}}}},
+  {"name":"invalid-filter","path":"/v1/products?available=True","expected":{"status":422,"kind":"error","value":{"error":{"code":"INVALID_REQUEST","message":"Invalid request"}}}},
+  {"name":"duplicate-filter","path":"/v1/products?available=true&available=true","expected":{"status":422,"kind":"error","value":{"error":{"code":"INVALID_REQUEST","message":"Invalid request"}}}},
+  {"name":"unknown-query","path":"/v1/products?other=demo","expected":{"status":422,"kind":"error","value":{"error":{"code":"INVALID_REQUEST","message":"Invalid request"}}}}
+]

@@ -22,11 +22,12 @@ test = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["catalog_api*", "contracts*", "practice_runner*"]
+include = ["catalog_api*", "contracts*", "practice_runner*", "postman*"]
 
 [tool.setuptools.package-data]
 contracts = ["v1/*.json", "v2/*.json", "examples/*.json"]
-practice_runner = ["assets/*.py.txt", "assets/*.json"]
+practice_runner = ["assets/*.py.txt", "assets/*.js.txt", "assets/*.json"]
+postman = ["*.json", "*.js", "*.cjs"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

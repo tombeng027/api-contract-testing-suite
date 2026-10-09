@@ -7,3 +7,4 @@ build/
 dist/
 artifacts/
 .practice-data/
+node_modules/

@@ -9,7 +9,7 @@ Updated October 9, 2026. Record verified work separately from planned features.
 | M1 API foundation | Implemented, reviewed and locally verified |
 | M1B repeatable-learning slice | Implemented; local verification recorded below |
 | M2 version evolution / remaining contract labs | Implemented, published and locally/hosted verified: compatibility plus interactive/reference Labs 2-5 |
-| M3 Postman/Newman parity | Not started |
+| M3 Postman parity | Revised user-approved scope implemented and locally verified: official CLI, portable collection, manual Lab 6; automatic scoring deferred |
 | M4 clean-install portability, hosted CI and presentation | Local/Windows/Ubuntu verification and source publication done early; broader presentation remains pending |
 
 ## M1 delivered
@@ -217,3 +217,36 @@ Local Windows/Python 3.14.3 verification after hardening:
 Also replaced the CLI integration test's blocking startup read with a bounded workspace-readiness deadline. The implementation does not add AI, M3, automatic history migration or resume. The hosted 160-case evidence above belongs to the pre-hardening commits; local success alone is not a claim of hosted verification for these changes.
 
 The first hardening [hosted run](https://github.com/tombeng027/api-contract-testing-suite/actions/runs/37926627871), source `a191a95467a07094f714acce9460ec58f7351061`, passed Ubuntu but found a Windows startup race in that new test: history was enumerated between directory allocation and the first atomic record write (213 passed, one test failure). The fix waits for `attempt.json` and all four workspace files before reading history; production corruption reporting remains unchanged. Added a deterministic provisional-directory/readiness regression. After the full 215-case local run, both readiness/full-CLI tests passed in five additional consecutive runs. This failed hosted run is retained as diagnostic evidence, not described as green.
+
+Follow-up source `666350ca54debe22a13b44358d5e4e62b1068d01` [hosted run 37927167145](https://github.com/tombeng027/api-contract-testing-suite/actions/runs/37927167145) passed all steps: Windows 215 passed in 49.91s and Ubuntu 215 passed in 37.67s, with eight exact compatibility outcomes inspected in both logs.
+
+## M3 revised implementation
+
+The [tool decision](postman-parity.md) records three explicit user choices:
+
+1. Do not adopt Newman after its initial dependency check flagged 19 packages including a critical advisory; retain the collection and assess a maintained alternative.
+2. Adopt pinned project-local official Postman CLI 1.71.0 and verify no-login execution/reporting first.
+3. After actual `--output` reporting required login, deliver collection execution and a manual Lab 6 guide, deferring automatic Lab 6 scoring rather than parsing terminal output into grades.
+
+Newman dependencies and the provisional Newman runner were removed before publication. The final npm lockfile installs only the official CLI and its platform binary; `npm audit` reports zero findings in the npm tree. This does not audit vendor binary internals.
+
+Delivered a ten-request portable Postman v2.1 collection and synthetic local environment, shared JavaScript assertions and reproducible exporter. Four named tests per request cover status, media type, selected v1 structural constraints and independent exact product/list/error values. No live v2 or schema weakening was introduced. The Python wrapper uses local files and explicit localhost URLs, disables run-event reporting/proxies/redirects, checks the pinned CLI version, bounds execution and retains raw source/stdout/stderr. It propagates failed-run exits rather than presenting them as learning outcomes.
+
+The separate manual [Lab 6 guide](../learning/labs/06-postman-parity.md) and reference explanation walk through predictions, a successful run, a schema-valid wrong-price failure and the distinction from connection/tool failure. There is no `--lab 6` practice-runner command or automatic persistence/score; M1B/M2 history and assessments remain unchanged.
+
+Local Windows/Python 3.14.3 / Node 24.14.0 / npm 11.9.0 verification:
+
+| Gate | Result |
+|---|---|
+| Targeted Postman regressions | 16 passed in 16.80s |
+| Full non-editable installed suite outside checkout | **231 passed in 74.91s**, zero failures/errors/skips |
+| Composition | Existing 215 cases + 16 Postman cases |
+| Documented manual wrapper | Exit 0; ten requests, forty assertions, zero failures without login |
+| Controlled business failure | One request, four assertions, exactly one failure; status/media/schema pass, known-values fails for 2500 versus 2501 |
+| Selected structural probes | Additive/integral-float acceptance; missing fields, wrong types/bounds, status/media mismatch rejection |
+| Infrastructure | Missing binary/version mismatch visible; refused connection is a failed run, not contract success; owned timeout process stops |
+| Dependency/install resources | `npm ci`, `npm audit` (zero findings), `pip check`, installed Postman collection export/resource consistency passed |
+| Isolation and compatibility | All 37 server lifecycle logs stop; all eight precise compatibility outcomes pass |
+| Documentation | 126 relative paths resolved before final progress additions; final check repeated before publication |
+
+The manually started verification API was stopped. CI now installs Node 24 and the pinned local CLI on Windows/Ubuntu, runs the installed suite outside checkout and retains synthetic raw parity evidence. Workflow configuration/local success alone is not a hosted verification claim.

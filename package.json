@@ -1,0 +1,13 @@
+{
+  "name": "catalog-contract-qa-tools",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Pinned local Postman CLI tooling for the synthetic API contract suite",
+  "engines": {"node": ">=22 <25"},
+  "scripts": {
+    "export:postman": "node postman/export.cjs"
+  },
+  "devDependencies": {
+    "postman-cli": "1.71.0"
+  }
+}

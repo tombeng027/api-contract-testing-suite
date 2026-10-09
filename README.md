@@ -4,7 +4,7 @@
 
 Personal QA learning and portfolio project: understand and test API response contracts, errors and compatibility as schemas evolve.
 
-**Status: M1/M1B and bounded M2 implemented; M2 scoring hardening locally verified.** The current combined suite has 215 passing cases locally; the pre-hardening 160-case baseline was published and verified on Windows/Ubuntu hosted CI. Postman/Newman and the full Lab 0-7 course remain pending.
+**Status: M1/M1B and bounded M2 implemented and hosted verified; M3 local Postman parity implemented with revised scope.** M3 uses the official Postman CLI rather than Newman. Lab 6 automatic scoring and the full Lab 0-7 course remain deferred; see [the approved tool/scope decision](docs/postman-parity.md).
 
 ## Implemented foundation
 
@@ -17,6 +17,7 @@ Personal QA learning and portfolio project: understand and test API response con
 - [Repeatable practice slice](learning/practice-slice.md): fresh workspaces, retained JSON answers/code evidence, first/final scores, pauses and history/statistics.
 - [Controlled compatibility demonstration](docs/compatibility-example.md): eight precise consumer outcomes, including a fixture-only v2 contract.
 - [M2 interactive practice](learning/m2-track.md): versioned packaged manifest, full/single-lab attempts, seeded prediction variants, four code exercises, saved explanations and task-level observations.
+- [Postman parity](docs/postman-parity.md): portable ten-request collection, forty critical assertions, pinned project-local CLI, raw console evidence, selected failure regressions and a manual [Lab 6](learning/labs/06-postman-parity.md).
 
 Development and documentation are AI-assisted. Executed results are recorded separately from planned capabilities; learner mastery is not claimed.
 
@@ -33,6 +34,15 @@ py -3.14 -m venv .venv
 Uses a non-editable installation. After changing application/schema source, rerun the install command. Constraints capture the verified environment's versions, not a hash-verified universal lockfile.
 
 Python metadata permits 3.12-3.14; executed versions are Windows 3.14.3 locally, Windows 3.14.7 and Ubuntu 3.14.8 in hosted CI. On Linux/macOS use `python3 -m venv .venv` and `.venv/bin/python`; macOS and Python 3.12/3.13 remain unverified.
+
+For the combined suite including Postman checks, install Node 24, then:
+
+```powershell
+npm ci
+npm audit
+```
+
+This installs the pinned Postman CLI locally; no global install or login is required. `npm audit` covers the npm package tree, not the vendor binary's internals. See [tooling boundaries](docs/postman-parity.md).
 
 No browser download, Docker, cloud credentials or Repo 1 dependency is required. Installation needs internet/package availability; tests use localhost with environment proxies disabled.
 
@@ -63,12 +73,15 @@ Stop your manual server with Ctrl+C. It binds localhost only; do not deploy this
 
 ## Verified evidence and limitations
 
-- Current hardened combined suite: **215 passed in 58.73s** outside checkout against the non-editable repository environment; zero failures/errors/skips. Includes 37 M1B runner cases, 89 M2 learning cases, 26 compatibility cases, three consumer-policy cases and one failure-cleanup regression alongside the 59-case foundation.
+- Current combined suite with revised M3 parity: **231 passed in 74.91s** outside checkout against the non-editable repository environment; zero failures/errors/skips. The added 16 Postman cases verify the export, critical live checks, selected positive/negative oracles, refused connections, missing/versioned tooling, URL restrictions and owned-process timeout cleanup.
+- M2 hardening baseline: **215 passed in 58.73s** outside checkout against the non-editable repository environment; zero failures/errors/skips. Includes 37 M1B runner cases, 89 M2 learning cases, 26 compatibility cases, three consumer-policy cases and one failure-cleanup regression alongside the 59-case foundation.
 - Pre-hardening clean-install baseline: **160 passed in 47.96s** outside checkout against the second clean non-editable environment.
 - [Verified hosted source run](https://github.com/tombeng027/api-contract-testing-suite/actions/runs/37922477474): Windows/Python 3.14.7 **160 passed in 28.39s**; Ubuntu/Python 3.14.8 **160 passed in 22.55s**. Both downloaded artifacts matched their SHA-256 digests; inspected JUnit, reports, all 35 shutdown logs and eight compatibility outcomes per runner.
 - Repeat checks now supersede stale passing scores; an infrastructure-error recheck cannot complete an attempt. Original pre-M2 v1 history was read without rewriting and retained its first/final scores.
 - Every M2 starter failed its intended objective checks; all four reference solutions passed. A full installed CLI run saved all 12 activities and score/check evidence, then released the writer lock. This was synthetic reference-driven verification, not learner achievement.
 - Review false passes for exact Python integer prices, additive tolerance and full v1/v2 compatibility now have regressions. New M2 assessment/checker version 2 keeps historical version-1 scores separate rather than regrading them. Overall prediction totals now count all selected tasks and agree with task-level counts.
+- [M2 hardening hosted run](https://github.com/tombeng027/api-contract-testing-suite/actions/runs/37927167145): Windows **215 passed in 49.91s**, Ubuntu **215 passed in 37.67s**, including eight exact compatibility outcomes on both platforms.
+- M3 local collection run: ten requests / forty assertions / zero failures, without login; all 37 combined server lifecycle logs stop. Selected intentional failures are retained separately under ignored synthetic parity evidence. Automatic Lab 6 scoring remains deferred by user decision.
 - Synthetic full-slice CLI run verified saved answers/code evidence, first score 50% versus revised final 100%, review and writer-lock release.
 - Initial default suite: 59 passed in 18.80s; follow-up default suite: 59 passed in 18.50s.
 - Final suite outside the checkout using importlib mode and installed target: 59 passed in 18.50s, zero failures/errors/skips.
@@ -85,9 +98,19 @@ VS Code's test tool found no tests and Pylance reported missing pytest while sel
 
 ## Later scope
 
-- A small Postman collection with equivalent critical checks, run through Newman.
+- Automatic Lab 6 scoring with maintained, complete local machine-readable reporting that requires no login. Current CLI `--output` is login-gated; no console-output grading workaround is used.
 - Lab 0/1/6/7 interactive assessments and the complete eight-lab course.
-- Lab 6/7 guides, broader failure-path evidence and additional runtime/platform portability.
+- Lab 7 guide, broader failure-path evidence and additional runtime/platform portability.
+
+## Run the Postman collection
+
+With the manually started API above running, use another terminal at the repository root:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\run_postman.py --base-url http://127.0.0.1:8001
+```
+
+Expect ten requests and forty assertions with zero failures in the printed console-evidence file. Exit 1 means a failed run; inspect its precise cause. Tool/setup/timeout errors are explicit exit 2. The default pytest suite starts its own isolated targets, so it needs no manual API. See [Lab 6](learning/labs/06-postman-parity.md) for the controlled wrong-price exercise.
 
 This complements the UI/API work-order project rather than duplicating its browser workflows. It is not a production service, security audit or universal compatibility analyzer.
 

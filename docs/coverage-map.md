@@ -15,6 +15,9 @@ This maps selected risks to observable assertions. Test counts include parameter
 | New consumer accepts malformed nested price | v2 required nested fields, nonnegative integer amount and synthetic USD policy | [Compatibility cases](../tests/test_compatibility.py) |
 | Any unrelated failure mistaken for defect detection | Identity/protocol/exit checks; verifier rejects wrong fields, paths, extra errors and false success | [Verifier regressions](../tests/test_compatibility.py) |
 | Assertion failure leaks app/server | Explicit-only nested failing probe has exact assertion, zero teardown errors and stopped lifecycle | [Fixture cleanup regression](../tests/test_fixture_cleanup.py) |
+| A ported check loses Python's critical expectations | Ten local requests/four assertions each, exact independent values/order/error code/message, packaged export consistency | [Postman source](../postman/checks.js), [parity regressions](../tests/test_postman.py) |
+| CLI failure misrepresented as precise contract detection | Schema-valid wrong-price probe proves status/media/schema pass and known-values fail; connection refusal is separately detected | [Postman regressions](../tests/test_postman.py) |
+| Structural port rejects additive/integral values or misses violations | Selected additive/integral positives and field/type/bound/status/media negatives against synthetic local probe server | [Postman regressions](../tests/test_postman.py) |
 
 ## Practice reliability
 
@@ -34,6 +37,7 @@ Personal `.practice-data/` never belongs in commits or CI artifacts. Local exerc
 - Live v2 service, universal API/schema diff analysis and real consumer migration.
 - Complete malformed-HTTP or framework error normalization beyond documented GET routes.
 - Automated explanation grading, adaptive AI coach or full Lab 0-7 assessment.
+- Automatic Lab 6 scoring or a local machine-readable CLI assertion protocol; current official CLI export requires login. Console inspection is used in selected regressions, not learner scoring.
 - Guarantees of retained knowledge, equivalent difficulty across every random variation or trustworthy self-managed attention time.
 
 Current executed platforms, counts and hosted results are recorded in [progress](progress.md). Workflow configuration alone is not evidence of CI success.

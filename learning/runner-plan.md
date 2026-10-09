@@ -4,6 +4,8 @@ Planning reviewed October 9, 2026. Requirements below describe the broader targe
 
 Implementation checkpoint: the M1B three-task slice and M2 Lab 2-5 full/focused track are implemented. See [M1B commands](practice-slice.md), [M2 commands](m2-track.md) and [executed evidence](../docs/progress.md). This document still describes the broader target; the full `api-foundations` Lab 0-7 commands below remain unavailable.
 
+M3 scope was revised with user approval after tool verification: [Lab 6](labs/06-postman-parity.md) is a manual Postman CLI reference lab, not a new runner track. Newman was rejected after dependency advisories; official CLI local execution works without login, but machine-readable report export requires login. Automatic Lab 6 scoring/persistence remains deferred rather than relaxing evidence or privacy gates. [Decision and boundaries](../docs/postman-parity.md).
+
 ## Purpose and boundaries
 
 A local command-line runner creates fresh practice attempts, saves answers/evidence and summarizes learning history. It supports repeated retrieval and diagnosis, not certification, competitive scoring or proof of mastery.
