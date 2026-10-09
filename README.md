@@ -4,7 +4,7 @@
 
 Personal QA learning and portfolio project: understand and test API response contracts, errors and compatibility as schemas evolve.
 
-**Status: M1/M1B and bounded M2 implemented; M2 scoring hardening locally verified.** The current combined suite has 214 passing cases locally; the pre-hardening 160-case baseline was published and verified on Windows/Ubuntu hosted CI. Postman/Newman and the full Lab 0-7 course remain pending.
+**Status: M1/M1B and bounded M2 implemented; M2 scoring hardening locally verified.** The current combined suite has 215 passing cases locally; the pre-hardening 160-case baseline was published and verified on Windows/Ubuntu hosted CI. Postman/Newman and the full Lab 0-7 course remain pending.
 
 ## Implemented foundation
 
@@ -63,7 +63,7 @@ Stop your manual server with Ctrl+C. It binds localhost only; do not deploy this
 
 ## Verified evidence and limitations
 
-- Current hardened combined suite: **214 passed in 59.36s** outside checkout against the non-editable repository environment; zero failures/errors/skips. Includes 37 M1B runner cases, 88 M2 learning cases, 26 compatibility cases, three consumer-policy cases and one failure-cleanup regression alongside the 59-case foundation.
+- Current hardened combined suite: **215 passed in 58.73s** outside checkout against the non-editable repository environment; zero failures/errors/skips. Includes 37 M1B runner cases, 89 M2 learning cases, 26 compatibility cases, three consumer-policy cases and one failure-cleanup regression alongside the 59-case foundation.
 - Pre-hardening clean-install baseline: **160 passed in 47.96s** outside checkout against the second clean non-editable environment.
 - [Verified hosted source run](https://github.com/tombeng027/api-contract-testing-suite/actions/runs/37922477474): Windows/Python 3.14.7 **160 passed in 28.39s**; Ubuntu/Python 3.14.8 **160 passed in 22.55s**. Both downloaded artifacts matched their SHA-256 digests; inspected JUnit, reports, all 35 shutdown logs and eight compatibility outcomes per runner.
 - Repeat checks now supersede stale passing scores; an infrastructure-error recheck cannot complete an attempt. Original pre-M2 v1 history was read without rewriting and retained its first/final scores.

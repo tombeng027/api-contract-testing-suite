@@ -440,6 +440,31 @@ def test_invalid_assessment_checker_pair_rejected(
         Attempt.model_validate(data)
 
 
+def full_cli_workspace_ready(root: Path) -> bool:
+    folders = list((root / "attempts").glob("*"))
+    return len(folders) == 1 and (folders[0] / "attempt.json").is_file() and all(
+        (folders[0] / "work" / f"lab{lab}.py").is_file() for lab in (2, 3, 4, 5)
+    )
+
+
+def test_cli_readiness_does_not_read_provisional_history(tmp_path: Path) -> None:
+    record = create_m2_attempt(Store(tmp_path / "source"), 42)
+    store = Store(tmp_path / "target")
+    assert not full_cli_workspace_ready(store.root)
+    folder = store.directory(record.attempt_id)
+    folder.mkdir(parents=True)
+    assert not full_cli_workspace_ready(store.root)
+    store.save(record)
+    assert not full_cli_workspace_ready(store.root)
+    work = folder / "work"
+    work.mkdir()
+    for lab in (2, 3, 4):
+        (work / f"lab{lab}.py").write_text("# synthetic readiness probe", encoding="utf-8")
+        assert not full_cli_workspace_ready(store.root)
+    (work / "lab5.py").write_text("# synthetic readiness probe", encoding="utf-8")
+    assert full_cli_workspace_ready(store.root)
+
+
 def test_full_installed_cli_reference_completion(tmp_path: Path) -> None:
     process = subprocess.Popen(
         [sys.executable, "-u", "-m", "practice_runner", "--data-dir", str(tmp_path),
@@ -449,12 +474,7 @@ def test_full_installed_cli_reference_completion(tmp_path: Path) -> None:
     try:
         deadline = time.monotonic() + 10
         while process.poll() is None and time.monotonic() < deadline:
-            records, errors = Store(tmp_path).history()
-            assert not errors
-            if len(records) == 1 and all(
-                (Store(tmp_path).directory(records[0].attempt_id) / "work" / f"lab{lab}.py").exists()
-                for lab in (2, 3, 4, 5)
-            ):
+            if full_cli_workspace_ready(tmp_path):
                 break
             time.sleep(0.05)
         else:

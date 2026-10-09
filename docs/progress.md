@@ -205,13 +205,15 @@ Local Windows/Python 3.14.3 verification after hardening:
 | Gate | Result |
 |---|---|
 | Practice regressions before final additional matrix/count cases | 115 passed in 33.13s |
-| Full installed suite outside checkout | **214 passed in 59.36s**, zero failures/errors/skips; preceding integration run also passed 214 in 63.53s |
-| Composition | 59 foundation + 1 failure cleanup + 37 M1B runner + 88 M2 learning + 26 compatibility + 3 consumer policy |
-| Selected regression additions | 54 cases covering false passes, required/invalid fields, valid-payload rejection, history/version separation and focused totals |
+| Full installed suite outside checkout | **215 passed in 58.73s**, zero failures/errors/skips; preceding integration runs passed 214 in 63.53s and 59.36s |
+| Composition | 59 foundation + 1 failure cleanup + 37 M1B runner + 89 M2 learning + 26 compatibility + 3 consumer policy |
+| Selected regression additions | 55 cases covering false passes, required/invalid fields, valid-payload rejection, history/version separation, focused totals and startup readiness |
 | Starters/reference solutions | All four starters fail; all four reference solutions pass, including full CLI completion |
 | Compatibility | All eight exact expected outcomes verified separately |
 | Resources/dependencies/lifecycle | Installed package resources verified; `pip check` passed; all 35 lifecycle logs ended with `app_stopped` |
 | Historical readback | Actual pre-M2 schema-1 JSON unchanged, first 0/final 100; version-1 M2 synthetic history/CLI review/stats unchanged and separated from version 2 |
 | Final documentation/diff review | 98 relative paths resolved; `git diff --check` passed |
 
-Also replaced the CLI integration test's blocking startup read with a bounded workspace-readiness deadline. The implementation does not add AI, M3, automatic history migration or resume. The hosted 160-case evidence above belongs to the pre-hardening commits; local 214-case success alone is not a claim of hosted verification for these changes.
+Also replaced the CLI integration test's blocking startup read with a bounded workspace-readiness deadline. The implementation does not add AI, M3, automatic history migration or resume. The hosted 160-case evidence above belongs to the pre-hardening commits; local success alone is not a claim of hosted verification for these changes.
+
+The first hardening [hosted run](https://github.com/tombeng027/api-contract-testing-suite/actions/runs/37926627871), source `a191a95467a07094f714acce9460ec58f7351061`, passed Ubuntu but found a Windows startup race in that new test: history was enumerated between directory allocation and the first atomic record write (213 passed, one test failure). The fix waits for `attempt.json` and all four workspace files before reading history; production corruption reporting remains unchanged. Added a deterministic provisional-directory/readiness regression. After the full 215-case local run, both readiness/full-CLI tests passed in five additional consecutive runs. This failed hosted run is retained as diagnostic evidence, not described as green.
