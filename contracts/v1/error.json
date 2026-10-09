@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Catalog v1 error consumer contract",
+  "type": "object",
+  "required": ["error"],
+  "properties": {
+    "error": {
+      "type": "object",
+      "required": ["code", "message"],
+      "properties": {
+        "code": {"enum": ["PRODUCT_NOT_FOUND", "INVALID_REQUEST"]},
+        "message": {"type": "string", "minLength": 1, "pattern": "\\S"}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

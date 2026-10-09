@@ -1,0 +1,65 @@
+name: QA verification
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contracts-and-learning:
+    name: Python 3.14 / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - name: Install constrained non-editable package
+        run: |
+          python -m pip install -c constraints.txt ".[test]"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m pip check
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          New-Item -ItemType Directory -Force artifacts | Out-Null
+          python -m pip freeze | Out-File -Encoding utf8 artifacts/installed-packages.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify installed resources outside checkout
+        run: |
+          $root = $env:GITHUB_WORKSPACE
+          Set-Location $env:RUNNER_TEMP
+          python "$root/scripts/check_package.py"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Run contract and synthetic learning regressions
+        run: |
+          $root = $env:GITHUB_WORKSPACE
+          Set-Location $env:RUNNER_TEMP
+          python -m pytest "$root/tests" -c "$root/pyproject.toml" --import-mode=importlib --html="$root/artifacts/report.html" --self-contained-html --junitxml="$root/artifacts/results.xml"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify precise controlled contract changes
+        run: |
+          python scripts/verify_compatibility.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Retain synthetic QA evidence only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-evidence-${{ matrix.os }}
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            artifacts/report.html
+            artifacts/results.xml
+            artifacts/installed-packages.txt
+            artifacts/lifecycle/
+            artifacts/compatibility/

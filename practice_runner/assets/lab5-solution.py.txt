@@ -1,0 +1,5 @@
+from contracts.compatibility import consumer
+
+
+def compatible(payload, version):
+    return not any(consumer(version).iter_errors(payload))

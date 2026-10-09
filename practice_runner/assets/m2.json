@@ -1,0 +1,55 @@
+{
+  "track": "api-contracts-m2",
+  "content_version": "1",
+  "assessment_version": "1",
+  "generator_version": "1",
+  "checker_version": "1",
+  "labs": {
+    "2": {
+      "topic": "meaningful-assertions",
+      "predictions": [
+        {"prompt": "HTTP 200, valid v1 shape, price {wrong_price}; independently expected {price}. Should the business assertion pass? (pass/fail)", "choices": ["pass", "fail"], "correct": "fail"},
+        {"prompt": "HTTP 200, valid v1 shape, price {price}; independently expected {price}. Should the business assertion pass? (pass/fail)", "choices": ["pass", "fail"], "correct": "pass"}
+      ],
+      "explanation": "Explain why status and schema alone cannot prove the independently expected price.",
+      "exercise": "Edit work/lab2.py: check_response(status, payload, expected) must assert status 200, exact Python integer price and independently expected value. Expected price: {price}.",
+      "hint": "Check status, type before equality, and an independent expected value; bool is an int subclass.",
+      "rubric": "Distinguish transport, structure and business values. Give a schema-valid wrong-price example and one limitation."
+    },
+    "3": {
+      "topic": "json-schema",
+      "predictions": [
+        {"prompt": "A v1 product omits price_cents. Which schema keyword fails at the root? (required/type/minimum)", "choices": ["required", "type", "minimum"], "correct": "required"},
+        {"prompt": "A v1 product has price_cents=-{price}. Which keyword fails at price_cents? (required/type/minimum)", "choices": ["required", "type", "minimum"], "correct": "minimum"},
+        {"prompt": "A v1 product has price_cents=\"{price}\". Which keyword fails at price_cents? (required/type/minimum)", "choices": ["required", "type", "minimum"], "correct": "type"}
+      ],
+      "explanation": "Explain instance path versus schema path, and why a missing field is located at its containing object.",
+      "exercise": "Edit work/lab3.py: check_response(status, payload, expected) must assert status 200 and the full v1 product schema. Do not enforce expected-price equality here. Schema integer semantics allow integral floats.",
+      "hint": "Use contracts.compatibility.consumer('v1').iter_errors(payload); assert no errors. This task checks structure, not price equality.",
+      "rubric": "Name a precise keyword/path, distinguish structure from semantics and explain zero/integral versus fractional prices."
+    },
+    "4": {
+      "topic": "error-contracts",
+      "predictions": [
+        {"prompt": "GET /v1/products/{missing_id} uses a valid missing ID. Predict status (200/404/422).", "choices": ["200", "404", "422"], "correct": "404"},
+        {"prompt": "GET /v1/products/0 uses an invalid ID. Predict status (200/404/422).", "choices": ["200", "404", "422"], "correct": "422"}
+      ],
+      "explanation": "Explain expected HTTP rejection versus connection/readiness failure. Why must known error fields be checked?",
+      "exercise": "Edit work/lab4.py: check_response(status, payload, expected) checks the error schema and exact expected status/code/message. expected is a dict with status, code and message; tolerate extra response metadata.",
+      "hint": "Validate the envelope, then compare all three independent expectations. An HTTP error is not a transport failure.",
+      "rubric": "Distinguish expected rejection, wrong contract and missing HTTP response. Explain additive tolerance without weakening known fields."
+    },
+    "5": {
+      "topic": "compatibility",
+      "predictions": [
+        {"prompt": "The tolerant v1 consumer receives an extra category field. Is this structurally compatible? (compatible/breaking)", "choices": ["compatible", "breaking"], "correct": "compatible"},
+        {"prompt": "The unchanged v1 consumer receives cost_cents instead of required price_cents. Is this structurally compatible? (compatible/breaking)", "choices": ["compatible", "breaking"], "correct": "breaking"},
+        {"prompt": "The unchanged v1 consumer receives nested v2 price instead of price_cents. Is this structurally compatible? (compatible/breaking)", "choices": ["compatible", "breaking"], "correct": "breaking"}
+      ],
+      "explanation": "Explain compatible with which consumer/version, and why schema compatibility is not business correctness.",
+      "exercise": "Edit work/lab5.py: compatible(payload, version) returns an exact bool for the selected v1/v2 schema. Keep v1 unchanged. Reject unknown versions explicitly with ValueError.",
+      "hint": "Use the selected consumer schema and return not any(validator.iter_errors(payload)); do not silently default unknown versions.",
+      "rubric": "State consumer/version/policy, name a breaking change, distinguish explicit v2 adoption from repairing v1 and state a semantic limitation."
+    }
+  }
+}

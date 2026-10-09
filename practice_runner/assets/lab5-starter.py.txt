@@ -1,0 +1,2 @@
+def compatible(payload, version):
+    return True

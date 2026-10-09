@@ -1,0 +1,2 @@
+def check_response(status, payload, expected):
+    assert status == expected["status"]

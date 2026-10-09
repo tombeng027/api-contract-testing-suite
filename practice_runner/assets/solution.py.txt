@@ -1,0 +1,3 @@
+def check_product(payload, expected_price):
+    assert type(payload["price_cents"]) is int
+    assert payload["price_cents"] == expected_price

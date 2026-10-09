@@ -1,0 +1,6 @@
+from contracts.compatibility import consumer
+
+
+def check_response(status, payload, expected):
+    assert status == 200
+    assert not list(consumer("v1").iter_errors(payload))

@@ -1,0 +1,4 @@
+def check_response(status, payload, expected):
+    assert status == 200
+    assert type(payload["price_cents"]) is int
+    assert payload["price_cents"] == expected

@@ -1,0 +1,12 @@
+import json
+from importlib.resources import files
+
+from jsonschema import Draft202012Validator
+
+
+def check_response(status, payload, expected):
+    schema = json.loads(files("contracts").joinpath("v1", "error.json").read_text(encoding="utf-8"))
+    assert not list(Draft202012Validator(schema).iter_errors(payload))
+    assert status == expected["status"]
+    assert payload["error"]["code"] == expected["code"]
+    assert payload["error"]["message"] == expected["message"]

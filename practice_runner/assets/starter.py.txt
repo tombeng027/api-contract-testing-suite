@@ -1,0 +1,3 @@
+def check_product(payload, expected_price):
+    # Replace the weak check with assertions for integer price and exact expected value.
+    assert "price_cents" in payload
