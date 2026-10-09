@@ -4,7 +4,7 @@
 
 Personal QA learning and portfolio project: understand and test API response contracts, errors and compatibility as schemas evolve.
 
-**Status: M1/M1B and bounded M2 implemented and hosted verified; M3 local Postman parity implemented with revised scope.** M3 uses the official Postman CLI rather than Newman. Lab 6 automatic scoring and the full Lab 0-7 course remain deferred; see [the approved tool/scope decision](docs/postman-parity.md).
+**Status: M1/M1B, bounded M2 and revised M3 Postman parity implemented and verified locally and on Windows/Ubuntu hosted CI.** M3 uses the official Postman CLI rather than Newman. Lab 6 automatic scoring and the full Lab 0-7 course remain deferred; see [the approved tool/scope decision](docs/postman-parity.md).
 
 ## Implemented foundation
 
@@ -82,6 +82,7 @@ Stop your manual server with Ctrl+C. It binds localhost only; do not deploy this
 - Review false passes for exact Python integer prices, additive tolerance and full v1/v2 compatibility now have regressions. New M2 assessment/checker version 2 keeps historical version-1 scores separate rather than regrading them. Overall prediction totals now count all selected tasks and agree with task-level counts.
 - [M2 hardening hosted run](https://github.com/tombeng027/api-contract-testing-suite/actions/runs/37927167145): Windows **215 passed in 49.91s**, Ubuntu **215 passed in 37.67s**, including eight exact compatibility outcomes on both platforms.
 - M3 local collection run: ten requests / forty assertions / zero failures, without login; all 37 combined server lifecycle logs stop. Selected intentional failures are retained separately under ignored synthetic parity evidence. Automatic Lab 6 scoring remains deferred by user decision.
+- [M3 hosted source run](https://github.com/tombeng027/api-contract-testing-suite/actions/runs/37930136864): Windows **231 passed in 66.70s**, Ubuntu **231 passed in 35.93s**. Both downloaded artifact digests matched; inspected JUnit, all 37 shutdown logs, eight compatibility outcomes and successful/controlled-negative Postman evidence per runner.
 - Synthetic full-slice CLI run verified saved answers/code evidence, first score 50% versus revised final 100%, review and writer-lock release.
 - Initial default suite: 59 passed in 18.80s; follow-up default suite: 59 passed in 18.50s.
 - Final suite outside the checkout using importlib mode and installed target: 59 passed in 18.50s, zero failures/errors/skips.

@@ -9,7 +9,7 @@ Updated October 9, 2026. Record verified work separately from planned features.
 | M1 API foundation | Implemented, reviewed and locally verified |
 | M1B repeatable-learning slice | Implemented; local verification recorded below |
 | M2 version evolution / remaining contract labs | Implemented, published and locally/hosted verified: compatibility plus interactive/reference Labs 2-5 |
-| M3 Postman parity | Revised user-approved scope implemented and locally verified: official CLI, portable collection, manual Lab 6; automatic scoring deferred |
+| M3 Postman parity | Revised user-approved scope implemented and locally/hosted verified: official CLI, portable collection, manual Lab 6; automatic scoring deferred |
 | M4 clean-install portability, hosted CI and presentation | Local/Windows/Ubuntu verification and source publication done early; broader presentation remains pending |
 
 ## M1 delivered
@@ -247,6 +247,24 @@ Local Windows/Python 3.14.3 / Node 24.14.0 / npm 11.9.0 verification:
 | Infrastructure | Missing binary/version mismatch visible; refused connection is a failed run, not contract success; owned timeout process stops |
 | Dependency/install resources | `npm ci`, `npm audit` (zero findings), `pip check`, installed Postman collection export/resource consistency passed |
 | Isolation and compatibility | All 37 server lifecycle logs stop; all eight precise compatibility outcomes pass |
-| Documentation | 126 relative paths resolved before final progress additions; final check repeated before publication |
+| Documentation | 128 relative paths resolved in final publication check |
 
 The manually started verification API was stopped. CI now installs Node 24 and the pinned local CLI on Windows/Ubuntu, runs the installed suite outside checkout and retains synthetic raw parity evidence. Workflow configuration/local success alone is not a hosted verification claim.
+
+### M3 publication and hosted evidence
+
+Source `848b982243ebf1799864ea5ef1c8371cf0ee3b0e` published normally to the approved remote. [Run 37930136864](https://github.com/tombeng027/api-contract-testing-suite/actions/runs/37930136864) passed all steps:
+
+| Platform | Full suite |
+|---|---|
+| Windows / Python 3.14 | **231 passed in 66.70s** |
+| Ubuntu / Python 3.14 | **231 passed in 35.93s** |
+
+Downloaded both synthetic evidence artifacts and matched the published SHA-256 ZIP digests:
+
+- Ubuntu artifact 11615613104: `5d6af443e82ffd181789f1fe686f0d589357bb5d43b84ec42a43b08a5117d632`.
+- Windows artifact 11615464616: `b98c5099468a9608f698c2614d0d7c4788469dba27263db77b47c9e95e5b54ce`.
+
+Each JUnit reports 231 tests, zero failures/errors/skips, and all 37 lifecycle logs end with `app_stopped`. Inspected raw Postman evidence per runner: critical collection 10 requests/40 assertions/zero failures; wrong-price demonstration 1 request/4 assertions/exactly one known-value failure; selected structural demonstration 20 requests/80 assertions/34 intentional assertion failures. The latter two are expected controlled outcomes inside passing pytest regressions, not failing CI. All eight precise Python compatibility outcomes also passed in both hosted logs.
+
+These results verify the revised bounded M3 scope, not automatic Lab 6 scores, the complete eight-lab course, vendor-binary security, universal schema equivalence, macOS or all permitted runtimes. Artifacts expire after seven days; no personal practice history is included.
