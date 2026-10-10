@@ -284,3 +284,20 @@ Local Windows/Python 3.14.3 verification:
 - Editor Problems reported no errors for the changed Python test and JavaScript source. The VS Code test tool still did not discover these tests; explicit repo-venv execution was used.
 
 The reproducibility guide now describes Node 24, pinned CLI installation/audit, outside-checkout binary configuration and synthetic parity retention. This follow-up is locally verified; publication and hosted verification are not yet claimed. Automatic Lab 6 scoring remains deliberately deferred.
+
+### Post-M3 hardening publication
+
+Published source `0a5787b57b18372a723b0a2ec65e16cf42c1465d` to the approved remote. [Run 38037621323](https://github.com/tombeng027/api-contract-testing-suite/actions/runs/38037621323) passed every step on Windows and Ubuntu with Python 3.14 / Node 24.
+
+Both downloaded JUnit reports contain **236 tests, zero failures/errors/skips**; recorded suite durations are 94.961s on Windows and 71.251s on Ubuntu. Each artifact contains 37 lifecycle logs ending with `app_stopped`, eight compatibility outcomes and eight synthetic Postman runs.
+
+Downloaded artifact ZIPs matched the published SHA-256 digests:
+
+- Windows artifact 11664755468: `6e96c0c0809970e112d7a7ff7ac3987da67e3f0aec13b16005dd62f550dfa252`.
+- Ubuntu artifact 11664504828: `178c8fd2121147428910205c8bff2432e9026bb7bec707a72ae4d3162d5b203c`.
+
+Inspected raw evidence on both platforms: critical collection 10 requests/40 assertions/zero failures; each SKU/name/message Unicode matrix 39 requests/156 assertions/31 intended schema failures; list matrix 13 requests/52 assertions/18 intended failures; error matrix 18 requests/72 assertions/32 intended failures. The existing wrong-price and product-structure probes retain their exact controlled outcomes. Negative probe failures are expected evidence inside passing tests, not CI failures.
+
+The local GitHub CLI watcher returned an authentication error; the run was checked using the public API and GitHub tool access without changing credentials. This does not affect Git publication or test results.
+
+The hardening publication gate is complete. Automatic Lab 6 scoring and Lab 7 remain deferred; these results do not establish universal validator equivalence or additional runtime/platform support.
