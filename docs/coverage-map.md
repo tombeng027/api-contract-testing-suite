@@ -18,6 +18,8 @@ This maps selected risks to observable assertions. Test counts include parameter
 | A ported check loses Python's critical expectations | Ten local requests/four assertions each, exact independent values/order/error code/message, packaged export consistency | [Postman source](../postman/checks.js), [parity regressions](../tests/test_postman.py) |
 | CLI failure misrepresented as precise contract detection | Schema-valid wrong-price probe proves status/media/schema pass and known-values fail; connection refusal is separately detected | [Postman regressions](../tests/test_postman.py) |
 | Structural port rejects additive/integral values or misses violations | Selected additive/integral positives and field/type/bound/status/media negatives against synthetic local probe server | [Postman regressions](../tests/test_postman.py) |
+| JavaScript/Python disagree on nonblank Unicode strings | Explicit Python-compatible whitespace class; all 29 whitespace characters and selected valid/invalid boundaries for SKU/name/error message, checked with both validators | [Postman source](../postman/checks.js), [parity regressions](../tests/test_postman.py) |
+| Structural port misses malformed list/error responses | Envelope/item/type/required-field/code/message negatives; empty-list and additive list/error positives with named schema outcomes | [Postman regressions](../tests/test_postman.py) |
 
 ## Practice reliability
 

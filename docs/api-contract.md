@@ -55,6 +55,8 @@ Tests check exact known seeded field values in addition to schema validation. A 
 
 JSON Schema integer semantics permit numerically integral JSON numbers; tests reject booleans as integer fields and reject string numbers. This is not a lexical JSON-number-format constraint.
 
+The installed Python validator applies Unicode `\S` to `sku`, `name` and error `message`: each string must contain at least one character outside Python's whitespace set. This includes rejecting whitespace-only U+0085 and U+001C-U+001F, but permits U+FEFF or U+200B as structurally nonblank. This is a character-class rule, not a guarantee of visually readable text. The Postman port uses an explicit matching class rather than JavaScript's different `\S` semantics; exact seeded values remain independently checked.
+
 ## M2 evolution examples
 
 The live endpoint contract above is unchanged. A [separate v2 fixture schema](../contracts/v2/product.json) replaces `price_cents` with `price.amount_cents` and `price.currency` (synthetic USD only).

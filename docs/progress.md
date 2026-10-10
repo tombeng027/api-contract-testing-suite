@@ -268,3 +268,19 @@ Downloaded both synthetic evidence artifacts and matched the published SHA-256 Z
 Each JUnit reports 231 tests, zero failures/errors/skips, and all 37 lifecycle logs end with `app_stopped`. Inspected raw Postman evidence per runner: critical collection 10 requests/40 assertions/zero failures; wrong-price demonstration 1 request/4 assertions/exactly one known-value failure; selected structural demonstration 20 requests/80 assertions/34 intentional assertion failures. The latter two are expected controlled outcomes inside passing pytest regressions, not failing CI. All eight precise Python compatibility outcomes also passed in both hosted logs.
 
 These results verify the revised bounded M3 scope, not automatic Lab 6 scores, the complete eight-lab course, vendor-binary security, universal schema equivalence, macOS or all permitted runtimes. Artifacts expire after seven days; no personal practice history is included.
+
+### Post-M3 parity hardening
+
+Review reproduced cross-language nonblank disagreements: Python rejected whitespace-only U+0085 while the actual pinned Postman CLI accepted it; U+FEFF showed the reverse. New regressions failed for SKU, name and error message before the fix, also detecting U+001C-U+001F. The added list/error envelope regressions already passed against the previous implementation.
+
+The shared JavaScript nonblank helper now uses an explicit class matching the existing Python Unicode whitespace policy. Python schemas, M2 assessment/checker versions and saved-history behavior are unchanged. The portable collection was regenerated and the non-editable package refreshed. Tests verify all 29 Python whitespace characters, selected valid boundaries, empty/mixed strings and padded text; list-item probes cover U+0085 rejection/U+FEFF acceptance. Malformed list/error envelopes, required fields, types, code/message constraints and valid additive/empty responses also have selected regressions.
+
+Local Windows/Python 3.14.3 verification:
+
+- Targeted Postman suite after the shared fix: **21 passed in 44.74s**. Two further list-item Unicode probes were then included in the final full-suite run.
+- Full installed suite outside checkout: **236 passed in 101.03s**, zero failures/errors/skips; HTML/JUnit evidence under ignored `artifacts/post-m3-hardening-*`.
+- Installed resource/export consistency checks, `pip check`, all eight precise compatibility outcomes and npm audit passed; audit reported zero findings in the npm tree.
+- All 37 lifecycle logs ended with `app_stopped`; 132 relative documentation paths resolved, collection re-export was deterministic and `git diff --check` passed.
+- Editor Problems reported no errors for the changed Python test and JavaScript source. The VS Code test tool still did not discover these tests; explicit repo-venv execution was used.
+
+The reproducibility guide now describes Node 24, pinned CLI installation/audit, outside-checkout binary configuration and synthetic parity retention. This follow-up is locally verified; publication and hosted verification are not yet claimed. Automatic Lab 6 scoring remains deliberately deferred.

@@ -171,6 +171,150 @@ def test_missing_cli_is_actionable(tmp_path: Path, monkeypatch: pytest.MonkeyPat
         run_collection({}, "http://127.0.0.1:8001", tmp_path)
 
 
+def verify_schema_probes(
+    kind: str, probes: list[tuple[str, object, object, bool]], request: pytest.FixtureRequest,
+) -> None:
+    status = 404 if kind == "error" else 200
+    schema = json.loads(files("contracts").joinpath(
+        "v1", {"product": "product.json", "list": "products.json", "error": "error.json"}[kind],
+    ).read_text(encoding="utf-8"))
+    validator = Draft202012Validator(schema)
+    cases = []
+    for index, (name, payload, expected_value, valid) in enumerate(probes):
+        assert validator.is_valid(payload) is valid, name
+        cases.append({
+            "name": name, "path": f"/probe/{index}",
+            "expected": {"status": status, "kind": kind, "value": expected_value},
+        })
+
+    class Handler(BaseHTTPRequestHandler):
+        def do_GET(self) -> None:
+            body = json.dumps(probes[int(self.path.rsplit("/", 1)[-1])][1]).encode("utf-8")
+            self.send_response(status)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        def log_message(self, _format: str, *args: object) -> None:
+            return
+
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        result = run_collection(
+            collection(cases, resource("checks.js")),
+            f"http://127.0.0.1:{server.server_port}",
+            request.config.rootpath / "artifacts" / "postman-parity",
+        )
+        output = result.stdout_path.read_text(encoding="utf-8")
+        assert not result.stderr_path.read_text(encoding="utf-8"), output
+        assert result.exit_code == (0 if all(probe[3] for probe in probes) else 1), output
+        assert re.search(rf"\|\s*requests\s*\|\s*{len(probes)}\s*\|\s*0\s*\|", output)
+        assert re.search(rf"\|\s*assertions\s*\|\s*{4 * len(probes)}\s*\|", output)
+        sections = re.split(r"^Root ", output, flags=re.MULTILINE)[1:]
+        assert len(sections) == len(probes)
+        for section, (name, _payload, _expected, valid) in zip(sections, probes, strict=True):
+            assert section.splitlines()[0].strip() == name
+            for assertion in ("status", "media-type"):
+                assert re.search(rf"^\s*Pass\s+{assertion}\s*$", section, re.MULTILINE), name
+            assert bool(re.search(r"^\s*Pass\s+schema\s*$", section, re.MULTILINE)) is valid, name
+            if valid:
+                assert re.search(r"^\s*Pass\s+known-values\s*$", section, re.MULTILINE), name
+            else:
+                assert re.search(r"^\s*\d+\.\s+schema\s*$", section, re.MULTILINE), name
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=5)
+        assert not thread.is_alive()
+
+
+@pytest.mark.parametrize("field", ["sku", "name", "message"])
+def test_postman_nonblank_matches_python_contract(
+    field: str, request: pytest.FixtureRequest,
+) -> None:
+    kind = "error" if field == "message" else "product"
+    reference = json.loads(resource("requests.json"))[5 if kind == "error" else 0]["expected"]["value"]
+    whitespace = [
+        *range(0x09, 0x0E), *range(0x1C, 0x21), 0x85, 0xA0, 0x1680,
+        *range(0x2000, 0x200B), 0x2028, 0x2029, 0x202F, 0x205F, 0x3000,
+    ]
+    assert whitespace == [code for code in range(0x110000) if chr(code).isspace()]
+    strings = [(f"blank-{code:04x}", chr(code), False) for code in whitespace]
+    strings += [
+        ("empty", "", False),
+        ("mixed-blank", " \t\u0085\u3000", False),
+        ("bom", "\ufeff", True),
+        ("zero-width-space", "\u200b", True),
+        ("mongolian-vowel-separator", "\u180e", True),
+        ("before-controls", "\u001b", True),
+        ("after-controls", "\u0021", True),
+        ("padded-ascii", "\u0085x\u3000", True),
+        ("padded-unicode", "\u0085\u00e9\u3000", True),
+        ("supplementary", "\U0001f600", True),
+    ]
+    probes = []
+    for name, text, valid in strings:
+        payload = deepcopy(reference)
+        target = payload["error"] if kind == "error" else payload
+        target[field] = text
+        probes.append((name, payload, payload, valid))
+    verify_schema_probes(kind, probes, request)
+
+
+@pytest.mark.parametrize("kind", ["list", "error"])
+def test_postman_list_and_error_schema_boundaries(
+    kind: str, request: pytest.FixtureRequest,
+) -> None:
+    reference = json.loads(resource("requests.json"))[2 if kind == "list" else 5]["expected"]["value"]
+    probes = [
+        ("valid-reference", reference, reference, True),
+        ("null-response", None, reference, False),
+        ("wrong-envelope", {"items": reference} if kind == "list" else [reference], reference, False),
+    ]
+    if kind == "list":
+        additive = [{**value, "category": "DEMO"} for value in reference]
+        probes.extend([
+            ("empty-list", [], [], True),
+            ("additive-items", additive, reference, True),
+            ("null-item", [None], reference, False),
+            ("array-item", [[]], reference, False),
+            ("string-item", ["product"], reference, False),
+            ("missing-id", [{key: value for key, value in reference[0].items() if key != "id"}],
+             reference, False),
+            ("wrong-price-type", [{**reference[0], "price_cents": True}], reference, False),
+            ("invalid-second-item", [reference[0], {**reference[1], "available": "false"}],
+             reference, False),
+            ("whitespace-only-sku", [{**reference[0], "sku": "\u0085"}], reference, False),
+            ("bom-sku", [{**reference[0], "sku": "\ufeff"}],
+             [{**reference[0], "sku": "\ufeff"}], True),
+        ])
+    else:
+        additive = {**reference, "trace": "synthetic",
+                    "error": {**reference["error"], "detail": "synthetic"}}
+        probes.extend([
+            ("additive-envelope-and-error", additive, reference, True),
+            ("missing-error", {}, reference, False),
+            ("null-error", {"error": None}, reference, False),
+            ("array-error", {"error": []}, reference, False),
+            ("string-error", {"error": "failure"}, reference, False),
+        ])
+        for field in ("code", "message"):
+            probes.append((f"missing-{field}", {"error": {
+                key: value for key, value in reference["error"].items() if key != field
+            }}, reference, False))
+        for name, code in (("unknown-code", "UNKNOWN"), ("numeric-code", 404), ("null-code", None)):
+            probes.append((name, {"error": {**reference["error"], "code": code}}, reference, False))
+        for name, message in (
+            ("empty-message", ""), ("blank-message", " \t\n"), ("numeric-message", 404),
+            ("null-message", None), ("array-message", []),
+        ):
+            probes.append((name, {"error": {**reference["error"], "message": message}}, reference, False))
+    verify_schema_probes(kind, probes, request)
+
+
 @pytest.mark.parametrize("url", [
     "https://example.com", "http://localhost:8001", "http://127.0.0.1",
     "http://user:password@127.0.0.1:8001", "http://127.0.0.1:8001/path",

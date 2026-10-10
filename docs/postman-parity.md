@@ -66,6 +66,10 @@ Every response checks status, parsed JSON media type, structural constraints and
 
 The JavaScript `schema` test manually implements the selected v1 constraints; it is not an invocation of the Python Draft 2020-12 validator. Numeric integral floats are accepted mathematically; booleans, fractions and string numbers are rejected. The [regressions](../tests/test_postman.py) verify selected positive/negative examples and matching packaged expectations, not universal schema-engine equivalence.
 
+Nonblank strings follow the existing Python Unicode `\S` behavior using an explicit JavaScript character class. Whitespace-only U+0085 and U+001C-U+001F fail; U+FEFF and U+200B remain structurally valid. This preserves the Python contract rather than imposing a new visual-text policy. Regressions exercise all 29 Python whitespace characters, empty/mixed strings, non-whitespace boundaries and padded text for SKU, name and error message against both Python schemas and the actual pinned CLI.
+
+Additional list/error probes check malformed envelopes/items, missing fields, wrong types, blank messages and unknown error codes, plus valid empty lists and additive list/error fields. Every probe checks transport/status/media success and the expected named schema outcome; valid cases also pass independent known-value checks. These are synthetic test oracles, not learner grades.
+
 Synthetic raw parity evidence is ignored under `artifacts/postman-parity/` and retained by CI. Personal histories and learner collection copies are never included. The wrapper's manual evidence defaults to unique directories under `artifacts/postman/`. Custom output locations need their own privacy/backup controls.
 
 ## Remaining gate
