@@ -1,6 +1,6 @@
 # Guided API-testing learning track
 
-**Status: Lab 0-6 reference guides, the M1B practice slice and the M2 interactive Lab 2-5 track are available. Lab 6 is manual, with no runner scoring; the full Lab 0-7 interactive course remains unimplemented.**
+**Status: Lab 0-7 reference guides, the M1B practice slice and the M2 interactive Lab 2-5 track are available. Labs 6-7 are manual, with no runner scoring; the full Lab 0-7 interactive course remains unimplemented.**
 
 Goal: turn conceptual understanding into checks you can write, debug and explain. Work through one small task at a time; do not memorize a completed framework.
 
@@ -29,7 +29,9 @@ Start with [Lab 0: test anatomy](labs/00-test-anatomy.md), then [Lab 1: HTTP exc
 
 Continue with [Lab 2: meaningful assertions](labs/02-meaningful-assertions.md), [Lab 3: JSON Schema](labs/03-json-schema.md), [Lab 4: error contracts](labs/04-error-contracts.md) and [Lab 5: compatibility](labs/05-compatibility.md). Their reference solutions are linked separately in each guide. The [M2 interactive track](m2-track.md) provides full/focused attempts, numeric Lab 2-5 selection, saved explanations and objective code checks. Reading a Markdown solution is not a logged assistance event.
 
-[Lab 6: Postman parity](labs/06-postman-parity.md) adds manual prediction, equivalent assertions, a local CLI run and a controlled wrong-price exercise. Automatic Lab 6 persistence/scoring is deferred by the [approved tool decision](../docs/postman-parity.md); there is no `--lab 6` command. Lab 7 remains planned.
+[Lab 6: Postman parity](labs/06-postman-parity.md) adds manual prediction, equivalent assertions, a local CLI run and a controlled wrong-price exercise. Automatic Lab 6 persistence/scoring is deferred by the [approved tool decision](../docs/postman-parity.md); there is no `--lab 6` command.
+
+[Lab 7: investigation and explanation](labs/07-investigation-and-explanation.md) is a manual evidence-triage and demo rehearsal. It uses existing controlled probes to distinguish a wrong expectation, a schema incompatibility and a refused connection. It adds no runner track, scoring or saved notes. The complete interactive Lab 0-7 course remains future work.
 
 ## Repeatable attempts
 
@@ -51,7 +53,7 @@ For each lab:
 
 - [ ] Predict the behavior before execution.
 - [ ] Run it yourself and identify the relevant evidence.
-- [ ] Complete the change without copying the reference solution.
+- [ ] Complete the exercise or change without copying the reference solution.
 - [ ] Demonstrate that the assertion catches the intended wrong behavior.
 - [ ] Explain why the check exists and one limitation.
 

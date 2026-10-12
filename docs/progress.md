@@ -300,4 +300,10 @@ Inspected raw evidence on both platforms: critical collection 10 requests/40 ass
 
 The local GitHub CLI watcher returned an authentication error; the run was checked using the public API and GitHub tool access without changing credentials. This does not affect Git publication or test results.
 
-The hardening publication gate is complete. Automatic Lab 6 scoring and Lab 7 remain deferred; these results do not establish universal validator equivalence or additional runtime/platform support.
+The hardening publication gate is complete. Automatic Lab 6 scoring and a Lab 7 interactive runner remain deferred; these results do not establish universal validator equivalence or additional runtime/platform support.
+
+### Lab 7 manual investigation and demo rehearsal
+
+Added a manual-only guide and separate reference explanation. It distinguishes a deliberately wrong business expectation (Postman `known-values` fails while status/media/schema pass), an intentionally incompatible v1 fixture (one exact `type` failure at `price_cents`) and a refused connection (`ECONNREFUSED`, zero response assertions). Each probe includes a safe next action, a verification step and explicit limits on what synthetic evidence proves. The final section provides a concise symptom/evidence/diagnosis/action/verification demo structure.
+
+Verified the documented commands locally: wrong-price regression **1 passed** with exact raw evidence; single type-change probe exited **1** as expected; the complete compatibility verifier passed all **8** outcomes; connection regression **1 passed** with retained `ECONNREFUSED` evidence and zero executed assertions; local API smoke tests **2 passed**. Relative Markdown links and `git diff --check` passed. No runner, checker, API or M1B/M2 scoring/history behavior changed. Lab 7 remains unscored and does not add a runner command.

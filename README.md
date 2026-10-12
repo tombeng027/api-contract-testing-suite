@@ -4,7 +4,7 @@
 
 Personal QA learning and portfolio project: understand and test API response contracts, errors and compatibility as schemas evolve.
 
-**Status: M1/M1B, bounded M2 and revised M3 Postman parity implemented and verified locally and on Windows/Ubuntu hosted CI.** M3 uses the official Postman CLI rather than Newman. Lab 6 automatic scoring and the full Lab 0-7 course remain deferred; see [the approved tool/scope decision](docs/postman-parity.md).
+**Status: M1/M1B, bounded M2 and revised M3 Postman parity implemented and verified locally and on Windows/Ubuntu hosted CI.** M3 uses the official Postman CLI rather than Newman. Manual Labs 6-7 are available; Lab 6 automatic scoring and the full interactive Lab 0-7 course remain deferred; see [the approved tool/scope decision](docs/postman-parity.md).
 
 ## Implemented foundation
 
@@ -13,7 +13,7 @@ Personal QA learning and portfolio project: understand and test API response con
 - Exact known-value assertions alongside schema checks; wrong-but-schema-valid price detection.
 - Per-test application/server instances on pre-bound ephemeral localhost sockets.
 - Bounded readiness/shutdown, lifecycle evidence, HTML and JUnit reports.
-- [API contract](docs/api-contract.md) and [Lab 0-5 reference guides](learning/README.md).
+- [API contract](docs/api-contract.md) and [Lab 0-7 reference guides](learning/README.md), including the manual [Lab 7 investigation/demo rehearsal](learning/labs/07-investigation-and-explanation.md).
 - [Repeatable practice slice](learning/practice-slice.md): fresh workspaces, retained JSON answers/code evidence, first/final scores, pauses and history/statistics.
 - [Controlled compatibility demonstration](docs/compatibility-example.md): eight precise consumer outcomes, including a fixture-only v2 contract.
 - [M2 interactive practice](learning/m2-track.md): versioned packaged manifest, full/single-lab attempts, seeded prediction variants, four code exercises, saved explanations and task-level observations.
@@ -102,8 +102,8 @@ VS Code's test tool found no tests and Pylance reported missing pytest while sel
 ## Later scope
 
 - Automatic Lab 6 scoring with maintained, complete local machine-readable reporting that requires no login. Current CLI `--output` is login-gated; no console-output grading workaround is used.
-- Lab 0/1/6/7 interactive assessments and the complete eight-lab course.
-- Lab 7 guide, broader failure-path evidence and additional runtime/platform portability.
+- Interactive assessments for Labs 0/1/6/7 and the complete eight-lab runner course.
+- Broader failure-path evidence and additional runtime/platform portability.
 
 ## Run the Postman collection
 
@@ -119,7 +119,7 @@ This complements the UI/API work-order project rather than duplicating its brows
 
 ## Learn alongside the suite
 
-The [guided learning track](learning/README.md) will connect each concept to a small prediction, execution, investigation and coding exercise.
+The [guided learning track](learning/README.md) connects concepts to small prediction, execution, investigation and coding exercises.
 
 Start all four M2 labs or select one:
 
