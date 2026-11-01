@@ -7,7 +7,7 @@ import uuid
 from pathlib import Path
 
 from practice_runner.storage import StorageError, safe_path
-from practice_runner.models import M2_CHECKER_VERSION, M2_CHECKS, VERSION
+from practice_runner.models import L01_CHECKER_VERSION, M2_CHECKER_VERSION, M2_CHECKS, VERSION
 
 OUTPUT_LIMIT = 4096
 
@@ -31,7 +31,7 @@ def stop_owned_process(process: subprocess.Popen[bytes]) -> None:
 def check_code(
     folder: Path, source: str, price: int, timeout: float = 5, *, lab: int | None = None
 ) -> dict[str, object]:
-    if lab is not None and lab not in (2, 3, 4, 5):
+    if lab is not None and lab not in (0, 1, 2, 3, 4, 5):
         raise ValueError(f"Unknown lab: {lab}")
     evidence = safe_path(folder, "evidence", uuid.uuid4().hex)
     evidence.mkdir(parents=True, exist_ok=False)
@@ -75,9 +75,14 @@ def check_code(
         }
     try:
         result = json.loads(safe_path(evidence, "result.json").read_text(encoding="utf-8"))
+        expected_version = (
+            VERSION if lab is None
+            else L01_CHECKER_VERSION if lab in (0, 1)
+            else M2_CHECKER_VERSION
+        )
         if (
             not isinstance(result, dict)
-            or result.get("checker_version") != (VERSION if lab is None else M2_CHECKER_VERSION)
+            or result.get("checker_version") != expected_version
             or result.get("lab") != lab
             or result.get("outcome") not in ("passed", "learner_failure", "infrastructure_error")
             or not isinstance(result.get("feedback"), str)

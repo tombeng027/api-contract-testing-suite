@@ -1,0 +1,11 @@
+def expected_status(product_id, filters, known_ids):
+    if product_id is not None:
+        if type(product_id) is not int or product_id <= 0:
+            return 422
+        return 200 if product_id in known_ids else 404
+    names = [name for name, _ in filters]
+    if len(names) > 1 or any(name != "available" for name in names):
+        return 422
+    if names and filters[0][1] not in ("true", "false"):
+        return 422
+    return 200

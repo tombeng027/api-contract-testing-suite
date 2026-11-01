@@ -1,0 +1,4 @@
+def expected_status(product_id, filters, known_ids):
+    if product_id is None:
+        return 200
+    return 200 if product_id in known_ids else 404

@@ -1,0 +1,11 @@
+REQUIRED_FIELDS = ("id", "sku", "name", "price_cents", "available")
+
+
+def failing_assertion(status, payload, expected):
+    if status != 200:
+        return "status"
+    if not isinstance(payload, dict) or any(field not in payload for field in REQUIRED_FIELDS):
+        return "schema"
+    if type(payload["price_cents"]) is not int or payload["price_cents"] != expected:
+        return "price"
+    return None

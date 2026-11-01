@@ -8,6 +8,7 @@ import practice_runner
 import postman
 from jsonschema import Draft202012Validator
 from practice_runner.m2 import manifest
+from practice_runner.labs01 import labs01_manifest
 from postman.runner import collection, resource
 
 
@@ -28,9 +29,10 @@ def main() -> None:
     for example in ("baseline", "additive", "removed", "renamed", "type_changed", "v2"):
         json.loads(files("contracts").joinpath("examples", f"{example}.json").read_text(encoding="utf-8"))
     manifest()
+    labs01_manifest()
     for name in (
         "starter", "solution",
-        *(f"lab{lab}-{kind}" for lab in (2, 3, 4, 5) for kind in ("starter", "solution")),
+        *(f"lab{lab}-{kind}" for lab in (0, 1, 2, 3, 4, 5) for kind in ("starter", "solution")),
     ):
         text = files("practice_runner").joinpath("assets", f"{name}.py.txt").read_text(encoding="utf-8")
         compile(text, f"{name}.py.txt", "exec")
@@ -38,7 +40,7 @@ def main() -> None:
         json.loads(resource("requests.json")), resource("checks.js"),
     )
     json.loads(resource("catalog.postman_environment.json"))
-    print("Packaged schemas, fixtures, M1B/M2 resources and portable Postman collection verified.")
+    print("Packaged schemas, fixtures, M1B/M2/Labs 0-1 resources and portable Postman collection verified.")
 
 
 if __name__ == "__main__":

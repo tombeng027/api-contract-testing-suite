@@ -14,6 +14,9 @@ M2_TRACK = "api-contracts-m2"
 M2_ASSESSMENT_VERSION = "2"
 M2_CHECKER_VERSION = "2"
 M2_CHECKS = ("valid", "boundary", "missing", "wrong-type", "wrong-value")
+L01_TRACK = "api-foundations-labs01"
+L01_ASSESSMENT_VERSION = "1"
+L01_CHECKER_VERSION = "1"
 STATUS = Literal["in_progress", "completed", "abandoned", "errored"]
 OUTCOME = Literal["passed", "learner_failure", "infrastructure_error", "ungraded"]
 
@@ -110,12 +113,15 @@ class Event(StrictRecord):
 class Attempt(StrictRecord):
     record_schema_version: Literal[1, 2] = 1
     attempt_id: str
-    track: Literal["api-foundations-m1b", "api-contracts-m2"] = TRACK
+    track: Literal["api-foundations-m1b", "api-contracts-m2", "api-foundations-labs01"] = TRACK
     content_version: Literal["1"] = VERSION
     assessment_version: Literal["1", "2"] = VERSION
     generator_version: Literal["1"] = VERSION
     checker_version: Literal["1", "2"] = VERSION
-    scope: Literal["slice", "prediction", "explanation", "code", "full", "lab-2", "lab-3", "lab-4", "lab-5"] = "slice"
+    scope: Literal[
+        "slice", "prediction", "explanation", "code",
+        "full", "lab-0", "lab-1", "lab-2", "lab-3", "lab-4", "lab-5",
+    ] = "slice"
     seed: int = Field(ge=0, le=2**32 - 1)
     variant: M2Variant | Variant
     manifest_digest: str
@@ -142,6 +148,20 @@ class Attempt(StrictRecord):
             labs = ["2", "3", "4", "5"] if self.scope == "full" else [self.scope.removeprefix("lab-")]
             if self.scope not in ("full", "lab-2", "lab-3", "lab-4", "lab-5"):
                 raise ValueError("Invalid M2 scope")
+            if list(self.variant.labs) != labs:
+                raise ValueError("Lab snapshot does not match scope")
+            expected = [f"{lab}.{kind}" for lab in labs for kind in TASKS]
+        elif self.track == L01_TRACK:
+            if (
+                self.assessment_version != L01_ASSESSMENT_VERSION
+                or self.checker_version != L01_CHECKER_VERSION
+            ):
+                raise ValueError("Labs 0-1 require their original assessment/checker versions")
+            if self.record_schema_version != 2 or not isinstance(self.variant, M2Variant):
+                raise ValueError("Labs 0-1 require schema 2 and their manifest snapshot")
+            labs = ["0", "1"] if self.scope == "full" else [self.scope.removeprefix("lab-")]
+            if self.scope not in ("full", "lab-0", "lab-1"):
+                raise ValueError("Invalid Labs 0-1 scope")
             if list(self.variant.labs) != labs:
                 raise ValueError("Lab snapshot does not match scope")
             expected = [f"{lab}.{kind}" for lab in labs for kind in TASKS]

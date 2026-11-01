@@ -1,6 +1,6 @@
 # Guided API-testing learning track
 
-**Status: Lab 0-7 reference guides, the M1B practice slice and the M2 interactive Lab 2-5 track are available. Labs 6-7 are manual, with no runner scoring; the full Lab 0-7 interactive course remains unimplemented.**
+**Status: Lab 0-7 reference guides, the M1B practice slice and the interactive Lab 0-1 and Lab 2-5 tracks are available. Labs 6-7 are manual, with no runner scoring; the complete unified Lab 0-7 interactive course remains unimplemented.**
 
 Goal: turn conceptual understanding into checks you can write, debug and explain. Work through one small task at a time; do not memorize a completed framework.
 
@@ -25,7 +25,7 @@ Before a run, write down what you expect. Afterward, use the actual response/tes
 
 Each implemented lab will provide an exact command, expected exit behavior, a small exercise, a separate reference solution and common incorrect approaches.
 
-Start with [Lab 0: test anatomy](labs/00-test-anatomy.md), then [Lab 1: HTTP exchange](labs/01-http-exchange.md). These guides use manual prediction notes and verified reference commands. The separate [M1B practice slice](practice-slice.md) provides one prediction, one saved explanation and one editable code task with fresh workspaces and objective checks.
+Start with [Lab 0: test anatomy](labs/00-test-anatomy.md), then [Lab 1: HTTP exchange](labs/01-http-exchange.md). These guides use manual prediction notes and verified reference commands. The [Labs 0-1 interactive track](labs01-track.md) adds full/focused attempts, numeric Lab 0-1 selection, saved explanations and objective code checks for the same topics. The separate [M1B practice slice](practice-slice.md) provides one prediction, one saved explanation and one editable code task with fresh workspaces and objective checks.
 
 Continue with [Lab 2: meaningful assertions](labs/02-meaningful-assertions.md), [Lab 3: JSON Schema](labs/03-json-schema.md), [Lab 4: error contracts](labs/04-error-contracts.md) and [Lab 5: compatibility](labs/05-compatibility.md). Their reference solutions are linked separately in each guide. The [M2 interactive track](m2-track.md) provides full/focused attempts, numeric Lab 2-5 selection, saved explanations and objective code checks. Reading a Markdown solution is not a logged assistance event.
 

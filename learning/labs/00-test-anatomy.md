@@ -1,6 +1,6 @@
 # Lab 0: environment and test anatomy
 
-M1 reference guide. These steps use local prediction notes, not scored attempts. A separate [M1B three-task runner slice](../practice-slice.md) is available; it does not automatically record this guide's activities.
+M1 reference guide. These steps use local prediction notes, not scored attempts. The [Labs 0-1 interactive track](../labs01-track.md) provides scored Lab 0 attempts; the separate [M1B three-task runner slice](../practice-slice.md) is also available. Neither automatically records this guide's activities.
 
 ## Concept
 

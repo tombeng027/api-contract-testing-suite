@@ -1,0 +1,34 @@
+{
+  "track": "api-foundations-labs01",
+  "content_version": "1",
+  "assessment_version": "1",
+  "generator_version": "1",
+  "checker_version": "1",
+  "labs": {
+    "0": {
+      "topic": "test-anatomy",
+      "predictions": [
+        {"prompt": "A test asserts in order: status, structure, exact price. The server returns HTTP 500 with a schema-valid body priced {price}. Which assertion reports the failure? (status/schema/price)", "choices": ["status", "schema", "price"], "correct": "status"},
+        {"prompt": "A test asserts in order: status, structure, exact price. The response is HTTP 200 and schema-valid, but the price is {wrong_price} instead of {price}. Which assertion reports the failure? (status/schema/price)", "choices": ["status", "schema", "price"], "correct": "price"},
+        {"prompt": "A test asserts in order: status, structure, exact price. The response is HTTP 200 but omits price_cents; the expected price is {price}. Which assertion reports the failure? (status/schema/price)", "choices": ["status", "schema", "price"], "correct": "schema"}
+      ],
+      "explanation": "Explain why assertion order determines the reported failure and why a passing status check alone cannot prove the business value.",
+      "exercise": "Edit work/lab0.py: failing_assertion(status, payload, expected) returns the first failing ordered check: 'status' unless status is 200; then 'schema' unless payload is an object with all five v1 fields; then 'price' unless price_cents is exactly the expected integer; otherwise None. Expected price: {price}.",
+      "hint": "Check status before structure and structure before the business value; bool is an int subclass in Python.",
+      "rubric": "Identify setup/action/assertion roles, explain first-failure reporting and state one limitation of a passing run."
+    },
+    "1": {
+      "topic": "http-exchange",
+      "predictions": [
+        {"prompt": "GET /v1/products/{missing_id} uses a valid but unseeded ID. Predict the status (200/404/422).", "choices": ["200", "404", "422"], "correct": "404"},
+        {"prompt": "GET /v1/products?available=True uses a capitalized filter value. Predict the status (200/404/422).", "choices": ["200", "404", "422"], "correct": "422"},
+        {"prompt": "GET /v1/products?available=true&available=true repeats the filter. Predict the status (200/404/422).", "choices": ["200", "404", "422"], "correct": "422"},
+        {"prompt": "GET /v1/products?available=false uses the exact lower-case filter. Predict the status (200/404/422).", "choices": ["200", "404", "422"], "correct": "200"}
+      ],
+      "explanation": "Explain why a valid missing ID returns 404 while invalid input returns 422, and why curl exit 0 does not mean the business request succeeded.",
+      "exercise": "Edit work/lab1.py: expected_status(product_id, filters, known_ids) returns the documented status. Product requests (product_id is not None, filters empty) return 422 for non-integer, boolean or nonpositive IDs, 200 for IDs in known_ids and otherwise 404. List requests (product_id is None) accept at most one available filter whose exact value is 'true' or 'false' and return 200; duplicate filters, unknown parameters and any other value return 422.",
+      "hint": "Distinguish invalid input from a valid-but-missing resource; compare exact lower-case filter values and count duplicates.",
+      "rubric": "Separate method/path/query roles from status/body meaning and explain transport success versus business success."
+    }
+  }
+}

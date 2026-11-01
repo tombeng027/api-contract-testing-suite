@@ -1,6 +1,6 @@
 # M2: repeatable contract practice
 
-This installed local track covers Labs 2-5. It does not implement the complete Lab 0-7 course, AI grading or an exam.
+This installed local track covers Labs 2-5. It does not implement the complete Lab 0-7 course, AI grading or an exam. Foundation Labs 0-1 have their own [interactive track](labs01-track.md).
 
 Read the [reference guides](README.md) alongside practice. Run from the repository root after [installation](../README.md#setup-windows-powershell); reinstall after changing runner source/resources.
 

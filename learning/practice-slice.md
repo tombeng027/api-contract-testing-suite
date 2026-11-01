@@ -54,7 +54,7 @@ Final scoring uses the latest submission or repeat check, not a stale earlier pa
 - Written explanations remain awaiting rubric review; no keyword grading.
 - `quit`, EOF and Ctrl+C preserve accepted progress as abandoned. There is no resume in this version; start again for a clean attempt.
 
-To focus on one task, use `--scope prediction`, `--scope explanation` or `--scope code`. Default `slice` selects all three. These scopes have separate statistics. This track ID remains `api-foundations-m1b`; numeric Lab 2-5 selection belongs to the separate [M2 track](m2-track.md). The planned full `api-foundations` Lab 0-7 course remains unimplemented.
+To focus on one task, use `--scope prediction`, `--scope explanation` or `--scope code`. Default `slice` selects all three. These scopes have separate statistics. This track ID remains `api-foundations-m1b`; numeric Lab 0-1 selection belongs to the separate [Labs 0-1 track](labs01-track.md) and Lab 2-5 selection to the [M2 track](m2-track.md). The complete unified `api-foundations` Lab 0-7 course remains unimplemented.
 
 ## Review and statistics
 

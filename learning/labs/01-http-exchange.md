@@ -1,6 +1,6 @@
 # Lab 1: read an HTTP exchange
 
-M1 reference guide, not an implemented interactive/scored attempt.
+M1 reference guide. The [Labs 0-1 interactive track](../labs01-track.md) provides scored Lab 1 attempts; this guide itself is not automatically assessed.
 
 ## Concept
 
@@ -65,4 +65,4 @@ Run the existing unknown-query regression as part of the second command. It veri
 - Why parse the media type instead of demanding one exact Content-Type string?
 - If curl exits 0 on a 404, what determines whether your test should pass?
 
-Code-edit starter workspaces, objective scoring and saved submissions are now available in the separate [M1B three-task slice](../practice-slice.md). This reference guide is not automatically assessed by that runner.
+Code-edit starter workspaces, objective scoring and saved submissions are available in the [Labs 0-1 interactive track](../labs01-track.md) and the separate [M1B three-task slice](../practice-slice.md). This reference guide is not automatically assessed by those runners.

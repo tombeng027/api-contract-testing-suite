@@ -24,11 +24,13 @@ This maps selected risks to observable assertions. Test counts include parameter
 
 ## Practice reliability
 
-The M1B/M2 runners are tested with synthetic temporary histories, not personal answers. Tests cover new attempts retaining prior work, revisions and assistance, pause/monotonic timing, score/sample arithmetic, scope/version separation, interrupted/error states, atomic write failure, corrupt history, locking and local path boundaries.
+The M1B/M2/Labs 0-1 runners are tested with synthetic temporary histories, not personal answers. Tests cover new attempts retaining prior work, revisions and assistance, pause/monotonic timing, score/sample arithmetic, scope/version separation, interrupted/error states, atomic write failure, corrupt history, locking and local path boundaries.
 
 Objective coding tasks must accept specified valid examples and reject specified wrong behavior. Structured predictions are deterministic; explanations are saved for rubric review. Starter/solution checks and topic variants belong to the [learning track](../learning/README.md).
 
 The [M2 regressions](../tests/test_m2_learning.py) cover all four starters/reference solutions, shortcuts, full CLI completion, full/focused seed equivalence, fresh-work preservation, schema-1/2 coexistence, invalid records, exact averages/paused timing and failed repeat checks. The [M2 guide](../learning/m2-track.md) lists the selected behavior probes and their limits.
+
+The [Labs 0-1 regressions](../tests/test_labs01_learning.py) cover both starters/reference solutions, constant/bool/out-of-order shortcut rejection, assertion-order evidence, full CLI completion, full/focused seed equivalence, fresh-work preservation, corrupt-record rejection, cross-track statistics separation and invalid CLI combinations. The [Labs 0-1 guide](../learning/labs01-track.md) lists the selected behavior probes and their limits.
 
 Assessment/checker version 2 adds regression evidence for the three review false passes, v1/v2 identity/availability omissions and invalid values, rejection of valid zero/positive/integral/additive examples, full/focused prediction totals, old/new version separation and historical readback. CLI integration waits for its workspace with a bounded deadline, not an unbounded startup `readline()`. This is selected behavior coverage, not a universal proof that arbitrary learner code is correct.
 
@@ -39,7 +41,7 @@ Personal `.practice-data/` never belongs in commits or CI artifacts. Local exerc
 - Production authentication, writes, persistent inventory, roles, concurrency/load and security audit.
 - Live v2 service, universal API/schema diff analysis and real consumer migration.
 - Complete malformed-HTTP or framework error normalization beyond documented GET routes.
-- Automated explanation grading, adaptive AI coach or full Lab 0-7 assessment.
+- Automated explanation grading, adaptive AI coach or a complete unified Lab 0-7 assessment; Labs 0-1 and 2-5 are separate interactive tracks and Labs 6-7 remain manual.
 - Automatic Lab 6 scoring or a local machine-readable CLI assertion protocol; current official CLI export requires login. Console inspection is used in selected regressions, not learner scoring.
 - Guarantees of retained knowledge, equivalent difficulty across every random variation or trustworthy self-managed attention time.
 

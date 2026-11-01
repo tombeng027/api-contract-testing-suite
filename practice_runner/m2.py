@@ -125,6 +125,8 @@ def create_m2_attempt(store: Store, seed: int, lab: int | None = None) -> Attemp
 
 
 class M2Session(Session):
+    checker = M2_CHECKER_VERSION
+
     def spec(self, task: str) -> LabSpec:
         self.available(task)
         variant = self.record.variant
@@ -137,8 +139,10 @@ class M2Session(Session):
         return getattr(spec, "exercise" if task_kind(task) == "code" else task_kind(task))
 
     def submit(self, task: str, answer: str = "") -> Event:
-        if self.record.checker_version != M2_CHECKER_VERSION:
-            raise PracticeError("Historical M2 assessment is read-only; start a fresh version-2 attempt")
+        if self.record.checker_version != type(self).checker:
+            raise PracticeError(
+                f"Historical assessment is read-only; start a fresh version-{type(self).checker} attempt"
+            )
         spec = self.spec(task)
         kind = task_kind(task)
         if kind == "prediction":

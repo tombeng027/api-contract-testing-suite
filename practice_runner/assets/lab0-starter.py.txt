@@ -1,0 +1,4 @@
+def failing_assertion(status, payload, expected):
+    if status != 200:
+        return "status"
+    return None

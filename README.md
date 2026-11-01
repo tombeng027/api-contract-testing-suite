@@ -102,7 +102,7 @@ VS Code's test tool found no tests and Pylance reported missing pytest while sel
 ## Later scope
 
 - Automatic Lab 6 scoring with maintained, complete local machine-readable reporting that requires no login. Current CLI `--output` is login-gated; no console-output grading workaround is used.
-- Interactive assessments for Labs 0/1/6/7 and the complete eight-lab runner course.
+- Interactive assessments for Labs 6/7 and the complete unified eight-lab runner course; Labs 0-1 and 2-5 have separate interactive tracks.
 - Broader failure-path evidence and additional runtime/platform portability.
 
 ## Run the Postman collection
@@ -129,7 +129,15 @@ Start all four M2 labs or select one:
 .\.venv\Scripts\python.exe -m practice_runner stats --track api-contracts-m2
 ```
 
-Use the printed task IDs and workspace paths; [M2 instructions](learning/m2-track.md) explain code signatures, scoring, history and boundaries. Existing M1B commands remain available unchanged.
+Foundation Labs 0-1 have their own interactive track:
+
+```powershell
+.\.venv\Scripts\python.exe -m practice_runner start --track api-foundations-labs01 --seed 42
+.\.venv\Scripts\python.exe -m practice_runner start --track api-foundations-labs01 --lab 0 --seed 42
+.\.venv\Scripts\python.exe -m practice_runner stats --track api-foundations-labs01
+```
+
+Use the printed task IDs and workspace paths; [M2 instructions](learning/m2-track.md) and [Labs 0-1 instructions](learning/labs01-track.md) explain code signatures, scoring, history and boundaries. Existing M1B commands remain available unchanged.
 
 The working suite and learner exercises are separate. Unfinished learner code is not discovered by the ordinary passing test command. Runner solution reveals are explicitly logged; reading Markdown references is not tracked. Generated materials are not proof of learner mastery. See [the working slice](learning/practice-slice.md) for commands and [the broader runner plan](learning/runner-plan.md) for future scope.
 

@@ -7,8 +7,9 @@ from pathlib import Path
 from pydantic import ValidationError
 
 from practice_runner.engine import PracticeError, Session, create_attempt, statistics
-from practice_runner.models import Attempt, TRACK, M2_TRACK, task_kind
+from practice_runner.models import Attempt, L01_TRACK, TRACK, M2_TRACK, task_kind
 from practice_runner.m2 import M2Session, create_m2_attempt
+from practice_runner.labs01 import Labs01Session, create_labs01_attempt
 from practice_runner.storage import StorageError, Store
 
 
@@ -100,13 +101,13 @@ def main() -> int:
     parser.add_argument("--data-dir", type=Path, default=Path.cwd() / ".practice-data")
     commands = parser.add_subparsers(dest="command", required=True)
     start = commands.add_parser("start")
-    start.add_argument("--track", choices=[TRACK, M2_TRACK], default=TRACK)
+    start.add_argument("--track", choices=[TRACK, M2_TRACK, L01_TRACK], default=TRACK)
     start.add_argument("--scope", choices=["slice", "prediction", "explanation", "code"], default="slice")
     start.add_argument("--seed", type=int, default=None)
-    start.add_argument("--lab", type=int, choices=[2, 3, 4, 5])
+    start.add_argument("--lab", type=int, choices=[0, 1, 2, 3, 4, 5])
     commands.add_parser("history")
     stats = commands.add_parser("stats")
-    stats.add_argument("--track", choices=[TRACK, M2_TRACK], default=TRACK)
+    stats.add_argument("--track", choices=[TRACK, M2_TRACK, L01_TRACK], default=TRACK)
     review = commands.add_parser("review")
     review.add_argument("attempt_id")
     unlock = commands.add_parser("unlock", help="Explicit stale lock recovery; verify owner first")
@@ -116,14 +117,17 @@ def main() -> int:
     try:
         if arguments.command == "start":
             if arguments.track == TRACK and arguments.lab is not None:
-                raise PracticeError("--lab requires --track api-contracts-m2")
-            if arguments.track == M2_TRACK and arguments.scope != "slice":
-                raise PracticeError("M2 uses --lab rather than --scope")
+                raise PracticeError("--lab requires an interactive lab track")
+            if arguments.track != TRACK and arguments.scope != "slice":
+                raise PracticeError("Lab tracks use --lab rather than --scope")
             with store.writer():
                 seed = secrets.randbits(32) if arguments.seed is None else arguments.seed
                 if arguments.track == M2_TRACK:
                     record = create_m2_attempt(store, seed, arguments.lab)
                     return interact(M2Session(store, record))
+                if arguments.track == L01_TRACK:
+                    record = create_labs01_attempt(store, seed, arguments.lab)
+                    return interact(Labs01Session(store, record))
                 record = create_attempt(store, seed, arguments.scope)
                 return interact(Session(store, record))
         if arguments.command == "review":

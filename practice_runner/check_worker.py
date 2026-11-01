@@ -5,7 +5,7 @@ import json
 import sys
 from pathlib import Path
 
-from practice_runner.models import M2_CHECKER_VERSION, VERSION
+from practice_runner.models import L01_CHECKER_VERSION, M2_CHECKER_VERSION, VERSION
 
 
 def main() -> None:
@@ -24,7 +24,13 @@ def main() -> None:
             raise RuntimeError("Unable to create learner module")
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
-        name = "check_product" if lab is None else ("compatible" if lab == 5 else "check_response")
+        name = (
+            "check_product" if lab is None
+            else "failing_assertion" if lab == 0
+            else "expected_status" if lab == 1
+            else "compatible" if lab == 5
+            else "check_response"
+        )
         function = getattr(module, name, None)
         if not callable(function):
             raise AttributeError(f"Define the required callable: {name}")
@@ -35,7 +41,10 @@ def main() -> None:
             ("string-price", {"price_cents": str(price)}, price, True),
             ("boolean-price", {"price_cents": True}, 1, True),
         ]
-        if lab is not None:
+        if lab is not None and lab in (0, 1):
+            from practice_runner.labs01_checks import check_lab01
+            checks = check_lab01(function, lab, price)
+        elif lab is not None:
             from practice_runner.m2_checks import check_lab
             checks = check_lab(function, lab, price)
         else:
@@ -58,7 +67,12 @@ def main() -> None:
         outcome = "infrastructure_error"
         feedback = f"{type(error).__name__}: {error}"
     Path(result_path).write_text(json.dumps({
-        "checker_version": VERSION if lab is None else M2_CHECKER_VERSION, "lab": lab,
+        "checker_version": (
+            VERSION if lab is None
+            else L01_CHECKER_VERSION if lab in (0, 1)
+            else M2_CHECKER_VERSION
+        ),
+        "lab": lab,
         "outcome": outcome, "feedback": feedback, "checks": checks,
     }), encoding="utf-8")
 

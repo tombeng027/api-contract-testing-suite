@@ -2,7 +2,7 @@
 
 Planning reviewed October 9, 2026. Requirements below describe the broader target, not a blanket claim of implemented or verified behavior.
 
-Implementation checkpoint: the M1B three-task slice and M2 Lab 2-5 full/focused track are implemented. Labs 6-7 are manual reference/explanation exercises, not runner tracks. See [M1B commands](practice-slice.md), [M2 commands](m2-track.md), [Lab 7](labs/07-investigation-and-explanation.md) and [executed evidence](../docs/progress.md). This document still describes the broader target; the full `api-foundations` Lab 0-7 commands below remain unavailable.
+Implementation checkpoint: the M1B three-task slice, the Labs 0-1 full/focused track and the M2 Lab 2-5 full/focused track are implemented. Labs 6-7 are manual reference/explanation exercises, not runner tracks. See [M1B commands](practice-slice.md), [Labs 0-1 commands](labs01-track.md), [M2 commands](m2-track.md), [Lab 7](labs/07-investigation-and-explanation.md) and [executed evidence](../docs/progress.md). This document still describes the broader target; the complete unified `api-foundations` Lab 0-7 commands below remain unavailable.
 
 M3 scope was revised with user approval after tool verification: [Lab 6](labs/06-postman-parity.md) is a manual Postman CLI reference lab, not a new runner track. Newman was rejected after dependency advisories; official CLI local execution works without login, but machine-readable report export requires login. Automatic Lab 6 scoring/persistence remains deferred rather than relaxing evidence or privacy gates. [Decision and boundaries](../docs/postman-parity.md).
 

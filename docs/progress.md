@@ -321,3 +321,28 @@ Implementation is deliberately paused at the user's request until after the Octo
 Work resumed after the pause. A fresh full-suite run inside the checkout on Windows / Python 3.14.3 produced **234 passed and 2 failed in 111.74s**: both live Postman parity tests failed because the first `postman --version` invocation after roughly three weeks idle exceeded the 5-second bound (`TimeoutExpired`). Immediately afterwards the pinned CLI answered `1.71.0` in about 1.1 seconds on consecutive manual timings, and the targeted Postman suite passed **21 in 44.41s** warm. This was a cold-start environment effect (first-run binary scanning), not a contract or source regression; the failing evidence is retained under ignored `artifacts/review-2026-11-01.xml`.
 
 Hardening: the version-inspection bound in `postman/runner.py` was raised from 5 to 30 seconds so one cold start cannot fail the suite, while remaining bounded and explicit. A hung or missing CLI still raises the same `PostmanError`; the pinned-version equality check, run bounds and owned-process cleanup are unchanged. No schema, API, runner, scoring or history behavior changed. The previously uncommitted October 12 pause checkpoint above is committed together with this entry, and its docs-only follow-up link now points at the actual hosted run.
+
+Published source `f2f8f4e25715110bb568c63fa5dd6b120b82e032` passed [hosted run 41255290640](https://github.com/tombeng027/api-contract-testing-suite/actions/runs/41255290640) on Windows and Ubuntu with all steps green.
+
+## Labs 0-1 interactive track — November 1, 2026
+
+Implemented the user-approved separate track `api-foundations-labs01`, reusing the verified M2 architecture: packaged JSON manifest, seeded deterministic prediction variants, full/focused `--lab 0`/`--lab 1` selection, schema-2 records with retained manifest snapshots, assessment/checker version 1 and the same five aggregate evidence groups. The full track has 6 required tasks and 4 all-or-nothing objective points; one lab has 3 tasks and 2 points. M1B and M2 records, versions and statistics remain readable and separate; no historical record is rewritten or regraded.
+
+Code tasks follow the existing lab guides: Lab 0's `failing_assertion(status, payload, expected)` returns the first failing ordered check (`status`/`schema`/`price`/None), making assertion order the observable behavior; Lab 1's `expected_status(product_id, filters, known_ids)` classifies requests against the documented contract, separating invalid input (422) from a valid missing resource (404). Selected probes include additive tolerance, zero price, boolean/string/float IDs and prices, capitalized/padded filter values, duplicate/unknown parameters, out-of-order assertion checks and constant/bool-return shortcuts. The shared session gained a class-level checker-version guard; the M2 guard behavior and message are unchanged.
+
+Both starters fail their intended evidence groups and both reference solutions pass all five. The CLI rejects `--lab` on the M1B track, `--scope` on lab tracks, cross-track lab numbers and invalid seeds without creating an attempt. `scripts/check_package.py` now validates the packaged Labs 0-1 manifest and compiles all six starter/solution pairs.
+
+Local Windows / Python 3.14.3 verification:
+
+| Gate | Result |
+|---|---|
+| New Labs 0-1 regressions | 30 passed in 10.21s |
+| Existing M1B/M2 runner suites | 118 passed in 31.32s; recheck regressions 8 passed |
+| Full installed suite outside checkout | **266 passed in 113.26s**, zero failures/errors/skips |
+| Composition | Previous 236 cases + 30 Labs 0-1 cases |
+| Starters/reference solutions | Both starters fail intended groups; both solutions pass all five, including full CLI completion at score 100 |
+| Shortcut/false-pass rejection | Constant, bool-return, out-of-order and duplicate-ignoring sources all fail objectively |
+| Resources/dependencies | Extended installed resource check passed; all eight precise compatibility outcomes verified |
+| Documentation/diff review | 154 relative documentation links resolved; `git diff --check` passed |
+
+New documentation: [Labs 0-1 track guide](../learning/labs01-track.md), updated learning README/status, Lab 0/1 guide pointers, M1B/M2/runner-plan cross-references, repository README commands and coverage map. This delivers two additional interactive labs, not the complete unified Lab 0-7 course; Labs 6-7 remain manual and automatic Lab 6 scoring stays deferred. Reference-driven verification is a software test, not learner achievement. Local success here is not a hosted verification claim; publication and hosted evidence follow separately.
