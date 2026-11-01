@@ -346,3 +346,7 @@ Local Windows / Python 3.14.3 verification:
 | Documentation/diff review | 154 relative documentation links resolved; `git diff --check` passed |
 
 New documentation: [Labs 0-1 track guide](../learning/labs01-track.md), updated learning README/status, Lab 0/1 guide pointers, M1B/M2/runner-plan cross-references, repository README commands and coverage map. This delivers two additional interactive labs, not the complete unified Lab 0-7 course; Labs 6-7 remain manual and automatic Lab 6 scoring stays deferred. Reference-driven verification is a software test, not learner achievement. Local success here is not a hosted verification claim; publication and hosted evidence follow separately.
+
+### Labs 0-1 publication and hosted evidence
+
+Source `672b2973c46914472025a733f517e777fdbbff3a` was published to the approved remote. [Hosted run 41257973883](https://github.com/tombeng027/api-contract-testing-suite/actions/runs/41257973883) completed successfully; the public API confirms both jobs — Python 3.14 on windows-latest and ubuntu-latest — concluded `success`, which includes the resource check, the full installed suite outside checkout, the npm audit gate and the precise compatibility verifier. The local GitHub CLI token remains invalid, so this run's artifact ZIPs and JUnit digests were not downloaded and inspected; job-level success is the recorded hosted evidence for this commit, a narrower claim than earlier digest-matched entries.
