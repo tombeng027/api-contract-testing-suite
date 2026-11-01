@@ -1,6 +1,6 @@
 # Repository 2 progress
 
-Updated October 9, 2026. Record verified work separately from planned features.
+Updated November 1, 2026. This is a chronological evidence log; older checkpoint statements are superseded by later dated entries. Record verified work separately from planned features.
 
 ## Milestone status
 
@@ -10,7 +10,7 @@ Updated October 9, 2026. Record verified work separately from planned features.
 | M1B repeatable-learning slice | Implemented; local verification recorded below |
 | M2 version evolution / remaining contract labs | Implemented, published and locally/hosted verified: compatibility plus interactive/reference Labs 2-5 |
 | M3 Postman parity | Revised user-approved scope implemented and locally/hosted verified: official CLI, portable collection, manual Lab 6; automatic scoring deferred |
-| M4 clean-install portability, hosted CI and presentation | Local/Windows/Ubuntu verification and source publication done early; broader presentation remains pending |
+| M4 clean-install portability, hosted CI and presentation | Local/Windows/Ubuntu verification and source publication done early; manual Labs 6-7 guides are ready; personal rehearsal/presentation remains pending |
 
 ## M1 delivered
 
@@ -190,7 +190,7 @@ Downloaded both artifacts and matched ZIP SHA-256 digests:
 
 Inspected retained HTML/JUnit evidence: each has 160 tests, zero failures/errors/skips, all 35 lifecycle logs ending with `app_stopped`, and the eight compatibility cases with expected exits `0,0,1,1,1,1,0,0`. JUnit suite durations are 28.372s and 22.541s respectively; the table uses pytest's displayed total duration. The artifacts include synthetic verification only and expire after seven days.
 
-This verifies the selected Ubuntu process-cleanup/path behavior as well as Windows regressions. It does not certify every possible subprocess, platform, Python 3.12/3.13 or user-written exercise. No user learning-achievement claim follows from reference-solution tests. M3 Postman/Newman is next; the full Lab 0-7 course and broader presentation remain pending.
+This verifies the selected Ubuntu process-cleanup/path behavior as well as Windows regressions. It does not certify every possible subprocess, platform, Python 3.12/3.13 or user-written exercise. No user learning-achievement claim follows from reference-solution tests. At that historical checkpoint, M3 Postman parity was next; the full Lab 0-7 course and broader presentation remained pending.
 
 ## Post-M2 review and assessment hardening
 
@@ -309,3 +309,15 @@ Added a manual-only guide and separate reference explanation. It distinguishes a
 Verified the documented commands locally: wrong-price regression **1 passed** with exact raw evidence; single type-change probe exited **1** as expected; the complete compatibility verifier passed all **8** outcomes; connection regression **1 passed** with retained `ECONNREFUSED` evidence and zero executed assertions; local API smoke tests **2 passed**. Relative Markdown links and `git diff --check` passed. No runner, checker, API or M1B/M2 scoring/history behavior changed. Lab 7 remains unscored and does not add a runner command.
 
 [Hosted run 38187475729](https://github.com/tombeng027/api-contract-testing-suite/actions/runs/38187475729) also passed on Windows and Ubuntu. Downloaded artifacts matched their published SHA-256 digests; both JUnit reports show **236 tests, zero failures/errors/skips** (Windows 50.651s; Ubuntu 94.302s). This verifies the full repository suite at the Lab 7 publication commit; the manual explanatory exercise itself is not automatically graded.
+
+## Current review and deliberate pause — October 12, 2026
+
+The latest published Repo 2 revision is `5b28a12d332b5f32b6a4399c707a63309ea44b5f`; its worktree was clean at review. The final documentation-only follow-up passed [hosted run 38187748585](https://github.com/tombeng027/api-contract-testing-suite/actions/runs/38187748585). The latest full source suite remains [run 38187475729](https://github.com/tombeng027/api-contract-testing-suite/actions/runs/38187475729): Windows and Ubuntu each passed 236 tests, with zero failures/errors/skips. This is test/CI evidence, not learner achievement.
+
+Implementation is deliberately paused at the user's request until after the October 14 credit reset. The next work is personal rehearsal, not another feature: complete [Lab 7](../learning/labs/07-investigation-and-explanation.md) without opening its reference first, then rehearse the Repo 1 walkthrough. Automatic Lab 6 scoring remains deferred because the official CLI's structured `--output` reporting requires login; no console-parsing grade workaround is in scope. The full interactive Lab 0-7 course, AI coaching and additional runtime/platform support remain future decisions, not current release blockers.
+
+## Resumption review and cold-start hardening — November 1, 2026
+
+Work resumed after the pause. A fresh full-suite run inside the checkout on Windows / Python 3.14.3 produced **234 passed and 2 failed in 111.74s**: both live Postman parity tests failed because the first `postman --version` invocation after roughly three weeks idle exceeded the 5-second bound (`TimeoutExpired`). Immediately afterwards the pinned CLI answered `1.71.0` in about 1.1 seconds on consecutive manual timings, and the targeted Postman suite passed **21 in 44.41s** warm. This was a cold-start environment effect (first-run binary scanning), not a contract or source regression; the failing evidence is retained under ignored `artifacts/review-2026-11-01.xml`.
+
+Hardening: the version-inspection bound in `postman/runner.py` was raised from 5 to 30 seconds so one cold start cannot fail the suite, while remaining bounded and explicit. A hung or missing CLI still raises the same `PostmanError`; the pinned-version equality check, run bounds and owned-process cleanup are unchanged. No schema, API, runner, scoring or history behavior changed. The previously uncommitted October 12 pause checkpoint above is committed together with this entry, and its docs-only follow-up link now points at the actual hosted run.

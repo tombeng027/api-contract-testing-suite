@@ -90,8 +90,9 @@ def run_collection(
         raise PostmanError("Use http://127.0.0.1:<port> for the synthetic target") from error
     executable = cli_path()
     try:
+        # Bounded but tolerant of first-invocation cold starts (e.g. antivirus scanning).
         version = subprocess.run(
-            [str(executable), "--version"], capture_output=True, text=True, timeout=5, check=False,
+            [str(executable), "--version"], capture_output=True, text=True, timeout=30, check=False,
         )
     except (OSError, subprocess.TimeoutExpired) as error:
         raise PostmanError(f"Unable to inspect Postman CLI version: {error}") from error
